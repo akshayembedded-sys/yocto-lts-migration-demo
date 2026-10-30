@@ -1,0 +1,26 @@
+# SPDX-License-Identifier: MIT
+header:
+  version: 14
+
+machine: qemuarm64
+distro: demo
+target: demo-image
+
+repos:
+  meta-demo:
+    layers:
+      meta-demo:
+
+  poky:
+    url: https://git.yoctoproject.org/poky
+    branch: kirkstone
+    commit: 93431249a6260da7bd29ee3ca32145d89e5b8259  # yocto-4.0.35
+    layers:
+      meta:
+      meta-poky:
+      meta-yocto-bsp:
+
+local_conf_header:
+  demo: |
+    INHERIT += "rm_work"
+    RM_WORK_EXCLUDE += "demod"
