@@ -77,7 +77,9 @@ def main():
             send(cmd)
             pos = read_until(PROMPT, pos)
         if pos is not None:
-            ok_daemon = b"Active: active (running)" in buf
+            # systemctl colours its output; strip ANSI escapes before matching
+            plain = re.sub(rb"\x1b\[[0-9;?]*[A-Za-z]", b"", buf)
+            ok_daemon = b"Active: active (running)" in plain
             send("poweroff")
             read_until(re.compile(rb"reboot: Power down|System halted"), pos)
 
