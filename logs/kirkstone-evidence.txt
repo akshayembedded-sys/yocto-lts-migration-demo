@@ -1,0 +1,66 @@
+# Kirkstone baseline evidence (trimmed from local logs, which are not committed)
+# build log: logs/kirkstone-20261030-2305.log    boot log: logs/kirkstone-boot-20261031-0149.log
+
+## Build result (scripts/build.sh kirkstone)
+BUILD_RELEASE=kirkstone
+BUILD_EXIT=0
+BUILD_SECONDS=9765
+IMAGE_FILE=/home/akshay-p/yocto-builds/kirkstone/build/tmp/deploy/images/qemuarm64/demo-image-qemuarm64-20261030173524.rootfs.ext4
+IMAGE_SIZE_BYTES=106166272
+NOTE: Tasks Summary: Attempted 4171 tasks of which 0 didn't need to be rerun and all succeeded.
+Summary: There were 63 WARNING messages.
+fetch fell back to Yocto mirrors (upstream URL unreachable): 12
+cve-check unpatched-CVE warnings: 51
+other warnings: 0
+
+## Deploy dir (qemuarm64)
+20864662 Oct 31 01:48 demo-image-qemuarm64-20261030173524.rootfs.cve
+106166272 Oct 31 01:49 demo-image-qemuarm64-20261030173524.rootfs.ext4
+46 Oct 31 01:48 demo-image-qemuarm64.cve -> demo-image-qemuarm64-20261030173524.rootfs.cve
+47 Oct 31 01:48 demo-image-qemuarm64.ext4 -> demo-image-qemuarm64-20261030173524.rootfs.ext4
+77 Oct 30 23:37 fitImage -> fitImage--5.15.201+git0+b75d71b7f2_8634ca1dd8-r0-qemuarm64-20261030173524.bin
+77 Oct 30 23:37 fitImage-qemuarm64.bin -> fitImage--5.15.201+git0+b75d71b7f2_8634ca1dd8-r0-qemuarm64-20261030173524.bin
+74 Oct 30 23:37 Image -> Image--5.15.201+git0+b75d71b7f2_8634ca1dd8-r0-qemuarm64-20261030173524.bin
+
+## FIT image (dumpimage -l fitImage)
+FIT description: Kernel fitImage for Demo industrial distro/5.15.201+gitAUTOINC+b75d71b7f2_8634ca1dd8/qemuarm64
+ Image 0 (kernel-1)
+  Type:         Kernel Image
+  Compression:  gzip compressed
+  Data Size:    7768460 Bytes = 7586.39 KiB = 7.41 MiB
+  Architecture: AArch64
+  Load Address: 0x40080000
+  Entry Point:  0x40080000
+ Default Configuration: 'conf-1'
+
+## Boot test (scripts/boot-test.sh kirkstone, runqemu qemuarm64 nographic slirp)
+BOOT_LOGIN_PROMPT=yes
+BOOT_DEMOD_RUNNING=yes
+BOOT_TEST_EXIT=0
+BOOT_SCRIPT_DONE
+[    0.000000] Booting Linux on physical CPU 0x0000000000 [0x411fd070]
+[    0.000000] Linux version 5.15.201-yocto-standard (oe-user@oe-host) (aarch64-poky-linux-gcc (GCC) 11.5.0, GNU ld (GNU Binutils) 2.38.20220708) #1 SMP PREEMPT Mon Feb 23 04:50:14 UTC 2026
+qemuarm64 login: root
+root@qemuarm64:~# systemctl status demod --no-pager
+* demod.service - Demo monitoring daemon
+     Loaded: loaded (]8;;file://qemuarm64/lib/systemd/system/demod.service/lib/systemd/system/demod.service]8;;; enabled; vendor preset: enabled)
+     Active: active (running) since Fri 2026-10-30 20:19:29 UTC; 4s ago
+   Main PID: 171 (demod)
+     Status: "sample 1"
+      Tasks: 1 (limit: 272)
+     Memory: 720.0K
+     CGroup: /system.slice/demod.service
+             `- 171 /usr/bin/demod 5
+
+Oct 30 20:19:28 qemuarm64 systemd[1]: Starting Demo monitoring daemon...
+Oct 30 20:19:29 qemuarm64 demod[171]: demod: started, interval 5s
+Oct 30 20:19:29 qemuarm64 systemd[1]: Started Demo monitoring daemon.
+Oct 30 20:19:29 qemuarm64 demod[171]: demod: sample=1 loadavg="0.00 0.00 ....73"
+Hint: Some lines were ellipsized, use -l to show in full.
+root@qemuarm64:~# systemctl is-active demod
+active
+root@qemuarm64:~# zcat /proc/config.gz | grep SOFT_WATCHDOG
+CONFIG_SOFT_WATCHDOG=y
+root@qemuarm64:~# uname -a
+Linux qemuarm64 5.15.201-yocto-standard #1 SMP PREEMPT Mon Feb 23 04:50:14 UTC 2026 aarch64 GNU/Linux
+root@qemuarm64:~# poweroff
