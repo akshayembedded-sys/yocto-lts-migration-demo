@@ -1,0 +1,37 @@
+# Build output and caches never go in the repo (DL_DIR/SSTATE_DIR live outside it)
+build/
+build-*/
+downloads/
+sstate-cache/
+tmp/
+tmp-*/
+cache/
+bitbake-cookerdaemon.log
+
+# Images and kernel artefacts
+*.ext4
+*.wic
+*.wic.*
+*.tar.bz2
+*.tar.gz
+*.tar.xz
+*.tar.zst
+*.img
+*.bin
+*.qcow2
+fitImage*
+Image*
+*.sdcard
+*.manifest
+
+# Full logs stay local; only trimmed evidence (*-evidence.txt) is committed
+logs/*.log
+
+# Local build products of the daemon
+demod/demod
+demod/*.o
+
+# Editor and lock files
+*.swp
+*~
+.~lock.*#
