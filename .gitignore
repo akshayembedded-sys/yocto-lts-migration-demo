@@ -23,6 +23,13 @@ fitImage*
 Image*
 *.sdcard
 *.manifest
+*.zst
+*.bmap
+*.dtb
+imx-boot*
+*.cve
+*.spdx.json
+*.sbom-cve-check.yocto.json
 
 # Full logs stay local; only trimmed evidence (*-evidence.txt) is committed
 logs/*.log
