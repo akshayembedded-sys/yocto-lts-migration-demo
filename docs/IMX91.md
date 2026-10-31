@@ -29,7 +29,7 @@ support comes from NXP's separate `meta-imx-frdm` layer. Its README pins it to t
 
 ## MACHINE: `imx91-11x11-lpddr4-frdm`
 
-meta-imx-frdm lists four machines for the i.MX 91:
+meta-imx-frdm lists four i.MX 91 machines in its `meta-imx-bsp` layer:
 
 | Machine | What it is |
 |---|---|
@@ -45,7 +45,8 @@ file is in the deploy dir.
 - **DISTRO `fsl-imx-xwayland`**, the distro the README and NXP's guide use. It sets
   `POKY_INIT_MANAGER = "systemd"`, and the build confirmed `INIT_MANAGER` = `systemd`, which `demod.service`
   needs. Our own `demo` distro is not used here. At the Scarthgap tag it builds the kernel as a FIT image
-  (`KERNEL_IMAGETYPE = "fitImage"`), and the board's default U-Boot boot flow does not expect that.
+  (`KERNEL_IMAGETYPE = "fitImage"`), and we did not try that with the board's U-Boot. NXP's tested distro
+  keeps the BSP's own kernel and boot setup.
 - **meta-demo from tag `scarthgap-migrated`**. `main` holds the Wrynose version of the layer, so the
   script exports the tagged copy with `git archive`. `demod` is fetched from this repo, mounted read-only.
 - The SOFT_WATCHDOG config fragment is in `linux-yocto_%.bbappend`. The board kernel is `linux-imx`, so
