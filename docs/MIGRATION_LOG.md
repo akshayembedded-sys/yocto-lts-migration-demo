@@ -44,9 +44,10 @@ expected to break in session 4. Evidence: `logs/scarthgap-evidence.txt`.
 
 ### S3. systemd skipped: missing `usrmerge`
 
-- **Log:** attempt 3, failed at parse after 4 s (`BUILD_EXIT=2`). The file `logs/scarthgap-20261031-1010.log`
+- **Log:** attempt 3, failed at parse (`BUILD_EXIT=2`). The file `logs/scarthgap-20261031-1010.log`
   was overwritten by attempt 4, which started in the same minute; `build.sh` now adds seconds to
-  the log name. The error lines below were copied from attempt 3's output before that happened.
+  the log name. The error lines below were copied from attempt 3's terminal output before that
+  happened; they are in `logs/scarthgap-evidence.txt`.
 - **Error:**
   ```
   ERROR: Nothing PROVIDES 'systemd' (but /build/../repo/meta-demo/recipes-demo/demod/demod_git.bb DEPENDS on or otherwise requires it)
@@ -71,7 +72,7 @@ expected to break in session 4. Evidence: `logs/scarthgap-evidence.txt`.
   ```
   NOTE: Tasks Summary: Attempted 5735 tasks of which 0 didn't need to be rerun and all succeeded.
   BUILD_EXIT=0
-  IMAGE_FILE=not found: /home/akshay-p/yocto-builds/scarthgap/build/tmp/deploy/images/qemuarm64/demo-image-qemuarm64.ext4
+  IMAGE_FILE=not found: ~/yocto-builds/scarthgap/build/tmp/deploy/images/qemuarm64/demo-image-qemuarm64.ext4
   ```
 - **Root cause:** since 4.3, `IMAGE_LINK_NAME` includes `IMAGE_NAME_SUFFIX` (`.rootfs`), so the
   deploy link is now `demo-image-qemuarm64.rootfs.ext4`. `build.sh` hard-coded the Kirkstone
@@ -281,12 +282,13 @@ Evidence: `logs/wrynose-evidence.txt`.
   ```
   NOTE: Tasks Summary: Attempted 5773 tasks of which 5552 didn't need to be rerun and all succeeded.
   BUILD_EXIT=0
-  IMAGE_FILE=not found: /home/akshay-p/yocto-builds/wrynose/build/tmp/deploy/images/qemuarm64/demo-image-qemuarm64.rootfs.ext4
+  IMAGE_FILE=not found: ~/yocto-builds/wrynose/build/tmp/deploy/images/qemuarm64/demo-image-qemuarm64.rootfs.ext4
   ```
   ```
   runqemu - ERROR - .zst images are only supported with snapshot mode. You can either use the "snapshot" option or use an uncompressed image.
   BOOT_TEST_EXIT=1
   ```
+  (`BOOT_TEST_EXIT` is from `boot-test.sh`'s terminal output; the console log has the runqemu line.)
 - **Root cause:** oe-core commit `aa5f60d1fc` ("bitbake/conf: Default to zstd compressed image
   output") changed `meta/conf/machine/include/qemu.inc` to `IMAGE_FSTYPES += "tar.zst ext4.zst"`
   and `qemuboot.bbclass` to `QB_DEFAULT_FSTYPE ?= "ext4.zst"`. `scripts/runqemu` only decompresses a
@@ -309,7 +311,8 @@ Evidence: `logs/wrynose-evidence.txt`.
   ERROR: demo-image-1.0-r0 do_sbom_cve_check: sbom-cve-check failed: ...
   sbom-cve-check: error: [Errno 2] No such file or directory: '/build/tmp/deploy/images/qemuarm64/demo-image-qemuarm64.rootfs-20261031074746.spdx.json'
   ```
-  The deploy dir only had `demo-image-qemuarm64.rootfs-20261031073605.spdx.json`.
+  The deploy dir only had `demo-image-qemuarm64.rootfs-20261031073605.spdx.json` (listing in
+  `logs/wrynose-evidence.txt`, copied from the session terminal).
 - **Root cause:** `meta/classes-recipe/sbom-cve-check.bbclass` line 17 builds the path from
   `${IMAGE_NAME}`, which carries `DATETIME` (excluded from task signatures in
   `image-artifact-names.bbclass` line 13). The `core/yocto/sbom-cve-check` fragment sets the two CVE
@@ -322,7 +325,11 @@ Evidence: `logs/wrynose-evidence.txt`.
 - **Fix:** `patches/openembedded-core/0001-sbom-cve-check-read-the-SBOM-through-IMAGE_LINK_NAME.patch`,
   applied by kas (`patches:` in `kas/wrynose.yml`). It reads the SBOM through `IMAGE_LINK_NAME`
   when that is set and keeps `IMAGE_NAME` for the empty-link case that `b9f060ea6d` fixed. With the
-  patch, attempt 11 (`logs/wrynose-20261031-132534.log`) reran `do_sbom_cve_check` on its own and
-  succeeded. The patch is not sent upstream yet.
+  patch, attempt 10 (`logs/wrynose-20261031-132129.log`) reran `do_sbom_cve_check` on its own and
+  succeeded (`Attempted 5773 tasks of which 5762 didn't need to be rerun and all succeeded`). It also
+  printed `IMAGE_UNCOMPRESSED_BYTES=0`, a fault in `build.sh`, not in the build: `zstd` skips a
+  symlink given as an argument, so the script now reads the image on stdin. Attempt 11
+  (`logs/wrynose-20261031-132534.log`) is the same build with the fixed script. The patch is not
+  sent upstream yet.
 - **Source:** our logs; [oe-core commit b9f060ea6d](https://git.openembedded.org/openembedded-core/commit/?id=b9f060ea6d54cc419df9ff5f8822a3536934606f);
   [6.0: cve-check class removed](https://docs.yoctoproject.org/migration-guides/migration-6.0.html#cve-check-class-removed)

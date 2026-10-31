@@ -40,7 +40,7 @@ BUILD_SECONDS=97
 NOTE: Tasks Summary: Attempted 5773 tasks of which 5552 didn't need to be rerun and all succeeded.
 BUILD_EXIT=0
 BUILD_SECONDS=578
-IMAGE_FILE=not found: /home/akshay-p/yocto-builds/wrynose/build/tmp/deploy/images/qemuarm64/demo-image-qemuarm64.rootfs.ext4
+IMAGE_FILE=not found: ~/yocto-builds/wrynose/build/tmp/deploy/images/qemuarm64/demo-image-qemuarm64.rootfs.ext4
 boot test logs/wrynose-boot-20261031-1315.log:
 runqemu - ERROR - .zst images are only supported with snapshot mode. You can either use the "snapshot" option or use an uncompressed image.
 ### 9: logs/wrynose-20261031-131741.log
@@ -49,9 +49,16 @@ NOTE: Tasks Summary: Attempted 5770 tasks of which 5761 didn't need to be rerun 
 BUILD_EXIT=2
 BUILD_SECONDS=95
 ### 10: logs/wrynose-20261031-132129.log (oe-core patch applied)
-Patch applied. (patch path: /repo/patches/openembedded-core/0001-sbom-cve-check-read-the-SBOM-through-IMAGE_LINK_NAME.patch, repo: openembedded-core, patch entry: sbom-link-name)
+Patch applied. (patch path: /repo/patches/openembedded-core/0001-sbom-cve-check-read-the-SBOM-through-IMAGE_LINK_NAME.patch, repo: openembedded-core)
+NOTE: recipe demo-image-1.0-r0: task do_sbom_cve_check: Started
+NOTE: recipe demo-image-1.0-r0: task do_sbom_cve_check: Succeeded
+NOTE: Tasks Summary: Attempted 5773 tasks of which 5762 didn't need to be rerun and all succeeded.
 BUILD_EXIT=0
 BUILD_SECONDS=198
+IMAGE_UNCOMPRESSED_BYTES=0   (build.sh fault: zstd skips a symlink argument; fixed before attempt 11)
+## deploy dir after attempt 9 (session terminal, ls of tmp/deploy/images/qemuarm64, SBOM lines)
+13:13:10 demo-image-qemuarm64.rootfs-20261031073605.spdx.json
+13:13:10 demo-image-qemuarm64.rootfs.spdx.json -> demo-image-qemuarm64.rootfs-20261031073605.spdx.json
 ### 11: logs/wrynose-20261031-132534.log (final)
 NOTE: Tasks Summary: Attempted 5773 tasks of which 5761 didn't need to be rerun and all succeeded.
 Summary: There were 15 WARNING messages.
@@ -60,7 +67,7 @@ other warnings: 0
 BUILD_RELEASE=wrynose
 BUILD_EXIT=0
 BUILD_SECONDS=191
-IMAGE_FILE=/home/akshay-p/yocto-builds/wrynose/build/tmp/deploy/images/qemuarm64/demo-image-qemuarm64.rootfs-20261031073605.ext4.zst
+IMAGE_FILE=~/yocto-builds/wrynose/build/tmp/deploy/images/qemuarm64/demo-image-qemuarm64.rootfs-20261031073605.ext4.zst
 IMAGE_SIZE_BYTES=36321026
 IMAGE_UNCOMPRESSED_BYTES=161427456
 
@@ -87,6 +94,7 @@ Oct 31 07:59:14 qemuarm64 demod[195]: demod: sample=1 loadavg="0.88 0.18 ....30"
 active
 CONFIG_SOFT_WATCHDOG=y
 Linux qemuarm64 6.18.52-yocto-standard #1 SMP PREEMPT Wed Sep 23 03:10:06 UTC 2026 aarch64 GNU/Linux
+# the BOOT_* lines below are boot-test.sh stdout from the session terminal; until session 6 the script did not write them into the console log
 BOOT_LOGIN_PROMPT=yes
 BOOT_DEMOD_RUNNING=yes
 BOOT_TEST_EXIT=0
