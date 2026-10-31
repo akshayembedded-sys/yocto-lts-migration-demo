@@ -6,7 +6,7 @@ Use of deprecated value "excluded" for repo "bitbake", layer ".". Replace with "
 ERROR: Layer demo is not compatible with the core layer which only supports these series: wrynose (layer is compatible with scarthgap)
 BUILD_EXIT=2
 BUILD_SECONDS=156
-(log name 11:37:27; first kas line 2026-10-31 11:39:07 "kas 5.5 started", after the image pull; clones start 11:39:07; ERROR at 11:40:02)
+(log name 11:37:27; the log starts with "Unable to find image 'ghcr.io/siemens/kas/kas:5.5' locally" and the pull; first kas line 2026-10-31 11:39:07 "kas 5.5 started", after the image pull; clones start 11:39:07; ERROR at 11:40:02)
 ### 2: logs/wrynose-20261031-114029.log
 bb.parse.ParseError: ParseError in configuration INHERITs: Could not inherit file classes/cve-check.bbclass
 BUILD_EXIT=2
