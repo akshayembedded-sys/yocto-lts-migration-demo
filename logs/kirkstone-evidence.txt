@@ -5,7 +5,7 @@
 BUILD_RELEASE=kirkstone
 BUILD_EXIT=0
 BUILD_SECONDS=9765
-IMAGE_FILE=/home/akshay-p/yocto-builds/kirkstone/build/tmp/deploy/images/qemuarm64/demo-image-qemuarm64-20261030173524.rootfs.ext4
+IMAGE_FILE=~/yocto-builds/kirkstone/build/tmp/deploy/images/qemuarm64/demo-image-qemuarm64-20261030173524.rootfs.ext4
 IMAGE_SIZE_BYTES=106166272
 NOTE: Tasks Summary: Attempted 4171 tasks of which 0 didn't need to be rerun and all succeeded.
 Summary: There were 63 WARNING messages.
@@ -34,6 +34,7 @@ FIT description: Kernel fitImage for Demo industrial distro/5.15.201+gitAUTOINC+
  Default Configuration: 'conf-1'
 
 ## Boot test (scripts/boot-test.sh kirkstone, runqemu qemuarm64 nographic slirp)
+# the BOOT_* lines below are boot-test.sh stdout from the session terminal; until session 6 the script did not write them into the console log
 BOOT_LOGIN_PROMPT=yes
 BOOT_DEMOD_RUNNING=yes
 BOOT_TEST_EXIT=0
