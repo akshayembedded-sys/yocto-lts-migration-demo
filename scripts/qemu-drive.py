@@ -2,6 +2,9 @@
 # SPDX-License-Identifier: MIT
 """Drive `runqemu nographic` over a pty: wait for login, run checks, power off.
 
+The guest runs in snapshot mode: nothing is written back to the image, and
+runqemu needs it to boot the .ext4.zst rootfs of Wrynose (MIGRATION_LOG.md W9).
+
 Runs inside the kas build environment (runqemu on PATH). Standard library only.
 Exit 0 only if the login prompt appeared and demod is active (running).
 """
@@ -31,7 +34,7 @@ def main():
 
     master, slave = pty.openpty()
     proc = subprocess.Popen(
-        ["runqemu", "qemuarm64", "nographic", "slirp"],
+        ["runqemu", "qemuarm64", "nographic", "slirp", "snapshot"],
         stdin=slave, stdout=slave, stderr=slave, close_fds=True,
         start_new_session=True,
     )

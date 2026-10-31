@@ -27,13 +27,19 @@ end=$(date +%s)
 
 [ "$status" -eq 0 ] || exit "$status"
 
-# ask bitbake for the link name; it gained ".rootfs" in 4.3 (MIGRATION_LOG.md S4)
-LINK_NAME=$("$KAS_CONTAINER" shell "$KAS_FILE" \
-	-c "bitbake-getvar --value -r demo-image IMAGE_LINK_NAME" 2>/dev/null | tail -1)
-IMAGE="$DEPLOY_DIR/$LINK_NAME.ext4"
+# ask bitbake for the image name and the type runqemu boots, instead of
+# guessing: the link gained ".rootfs" in 4.3 (MIGRATION_LOG.md S4) and the
+# qemu rootfs became ext4.zst in 5.3 (W9)
+read -r LINK_NAME FSTYPE < <("$KAS_CONTAINER" shell "$KAS_FILE" \
+	-c "echo \$(bitbake-getvar --value -r demo-image IMAGE_LINK_NAME) \$(bitbake-getvar --value -r demo-image QB_DEFAULT_FSTYPE)" \
+	2>/dev/null | tail -1)
+IMAGE="$DEPLOY_DIR/$LINK_NAME.$FSTYPE"
 if [ -e "$IMAGE" ]; then
 	echo "IMAGE_FILE=$(readlink -f "$IMAGE")" | tee -a "$LOG"
 	echo "IMAGE_SIZE_BYTES=$(stat -L -c %s "$IMAGE")" | tee -a "$LOG"
+	case "$FSTYPE" in
+	*.zst) echo "IMAGE_UNCOMPRESSED_BYTES=$(zstd -dc <"$IMAGE" | wc -c)" | tee -a "$LOG" ;;
+	esac
 else
 	echo "IMAGE_FILE=not found: $IMAGE" | tee -a "$LOG"
 	exit 1
