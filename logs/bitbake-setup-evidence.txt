@@ -3,6 +3,11 @@
 + python3 -m venv --clear ./bitbake-setup-venv
 The virtual environment was not created successfully because ensurepip is not
 available.  On Debian/Ubuntu systems, you need to install the python3-venv
+## attempt 2 (from the session terminal, no log file kept): bitbake-setup init succeeded, then the script sourced the wrong path
++ . /top/poky-wrynose/build/init-build-env
+bash: line 16: /top/poky-wrynose/build/init-build-env: No such file or directory
+BITBAKE_SETUP_EXIT=1
+(bitbake-setup puts setups under <top-dir-prefix>/bitbake-builds; the script was fixed to /top/bitbake-builds/poky-wrynose)
 ## attempt 3: logs/bitbake-setup-20261031-133501.log
 + rm -rf bitbake
 + git clone -q -b 2.18 https://git.openembedded.org/bitbake bitbake
