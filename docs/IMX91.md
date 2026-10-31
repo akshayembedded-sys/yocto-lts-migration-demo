@@ -82,7 +82,8 @@ These steps are from NXP's [Getting Started with FRDM-IMX91](https://www.nxp.com
 - The console is the debug USB-C port `P16` at 115200 8N1. The first of the two serial ports is the
   Cortex-A55 console. Power goes to `P1`.
 
-The image is written with `zstdcat ... | dd`. The exact commands we used are in the session 5 results below.
+The image is written to the card with `zstdcat <image>.wic.zst | sudo dd of=/dev/sdX bs=1M conv=fsync`,
+after `lsblk` before and after inserting the card has confirmed which device is the card.
 
 ## Result on the board
 
