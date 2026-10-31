@@ -20,7 +20,7 @@ Guide base URL: `https://docs.yoctoproject.org/migration-guides/`, written as `G
 - Commits come from `git ls-remote '<repo>' 'refs/tags/yocto-X^{}'` on 2026-10-30. Session 2 copies them into `docs/VERSIONS.md`.
 - Kernel versions come from the `meta/recipes-kernel/linux/` listing on each branch. 6.0 ships 6.18 (see the [6.0 release notes](https://docs.yoctoproject.org/migration-guides/release-notes-6.0.html#new-features-enhancements-in-yocto-ver)).
 - Wrynose bitbake branch `2.18`: see [6.0 release notes, Repositories](https://docs.yoctoproject.org/migration-guides/release-notes-6.0.html#repositories-downloads-for-yocto-yocto-ver).
-- Still to source before docs/ cites it: the CLAUDE.md claim "Kirkstone end of life April 2026". It needs a link to the Yocto releases page in session 6.
+- Kirkstone end of life: sourced in session 6 to the [Yocto releases page](https://wiki.yoctoproject.org/wiki/Releases), which lists Kirkstone as "EOL" without a date; README.md and docs/ARTICLE.md cite it that way (corrected).
 
 ---
 
@@ -177,8 +177,8 @@ bitbake-config-build enable-fragment core/yocto/root-login-with-empty-password
 bitbake demo-image
 ```
 bitbake-setup exists only for 5.3 and later, so Kirkstone and Scarthgap have no equivalent; their
-kas files are the reference. The commands above are the ones that worked in session 4; the run and
-every change from the first sketch are in `docs/BITBAKE-SETUP.md`.
+kas files are the reference. The commands above are the core of what worked in session 4. The full sequence, with the BitBake
+pin, the `bitbake-setup settings` commands and the `local.conf` additions, is in `docs/BITBAKE-SETUP.md`.
 
 ---
 

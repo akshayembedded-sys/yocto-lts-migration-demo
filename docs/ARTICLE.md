@@ -114,6 +114,6 @@ each step. I did not measure why, so I am not claiming a cause.
 5. **Tag each release before you move on.** The layer can only target one series at a time, so the
    tags are the only way to rebuild the old versions.
 
-Wrynose also brings `bitbake-setup`, the official alternative to kas ([Quick Build](https://docs.yoctoproject.org/wrynose/brief-yoctoprojectqs/index.html)). I built the same image with it
+Wrynose also brings `bitbake-setup`, the Yocto Project's own setup tool ([Quick Build](https://docs.yoctoproject.org/wrynose/brief-yoctoprojectqs/index.html)). I built the same image with it
 once. One thing to know: its default `poky-wrynose` configuration follows branch heads, not the release
 tag. So if you need a reproducible build, record the revisions it writes out.
