@@ -1,6 +1,7 @@
 # PLAN: Yocto LTS migration demo (Kirkstone → Scarthgap → Wrynose)
 
-Status: Session 1 output. No layer code exists yet. Every "predicted break" below cites the
+Status: Session 1 output, kept as written then, apart from corrections marked "(corrected)".
+What actually happened is in `docs/MIGRATION_LOG.md` and `docs/RESULTS.md`. Every "predicted break" below cites the
 migration-guide section that predicts it. A prediction counts only once our own log confirms it
 (sessions 3 and 4). Sources were read on 2026-10-30.
 
@@ -39,8 +40,8 @@ meta-demo/
 demod/                                 daemon source (C + Makefile), MIT, in this repo
 ```
 
-**Daemon source (decision, flag it if you disagree).** The repo stays private until the NOC is
-signed, so the recipe cannot fetch from GitHub without credentials inside the container. The
+**Daemon source (decision, flag it if you disagree).** The repo was private while it was
+built, so the recipe cannot fetch from GitHub without credentials inside the container. The
 daemon source lives in `demod/` in this repo. The recipe fetches it with the real git fetcher:
 `git:///repo;protocol=file;subpath=demod` (kas-container mounts the repo at `/repo`), with a
 pinned `SRCREV`. This still uses `S = "${WORKDIR}/git"` and the git fetcher's branch rules, so the
@@ -56,7 +57,7 @@ no smart-home protocols.
 | # | Kirkstone-era code (deliberate) | Predicted break | Release | Guide section |
 |---|---|---|---|---|
 | 1 | `demod_git.bb`: `S = "${WORKDIR}/git"` | Fatal: `Recipes that set S = "${WORKDIR}/git" ... should remove that assignment` (text found in Wrynose `insane.bbclass`). Fix: delete the line, because the default `S` is `${UNPACKDIR}/${BP}` | 6.0 (introduced 5.3; still works in 5.0 and 5.1) | [5.3: S = ${WORKDIR}/git ... should be removed](https://docs.yoctoproject.org/migration-guides/migration-5.3.html#s-workdir-git-and-s-unpackdir-git-should-be-removed); [5.1 General notes](https://docs.yoctoproject.org/migration-guides/migration-5.1.html#general-notes) |
-| 2 | `demod_git.bb`: `install -m 0644 ${WORKDIR}/demod.service ...` | `do_install` cannot find the file, because `file://` sources now unpack to `${UNPACKDIR}` (`WORKDIR/sources-unpack`). Fix: `${UNPACKDIR}/demod.service` | 6.0 (introduced 5.1) | [5.1: WORKDIR references in recipes](https://docs.yoctoproject.org/migration-guides/migration-5.1.html#workdir-references-in-recipes) |
+| 2 | `demod_git.bb`: `install -m 0644 ${WORKDIR}/demod.service ...` | `do_install` cannot find the file, because `file://` sources now unpack to `${UNPACKDIR}` (`WORKDIR/sources` in Wrynose `bitbake.conf`; corrected). Fix: `${UNPACKDIR}/demod.service` | 6.0 (introduced 5.1) | [5.1: WORKDIR references in recipes](https://docs.yoctoproject.org/migration-guides/migration-5.1.html#workdir-references-in-recipes) |
 | 3 | ~~`SRC_URI` with no `branch=`~~ **Dropped in session 2.** With no `branch=`, the Kirkstone fetcher (bitbake 2.0 `fetch2/git.py`) warns, uses `master`, then requires `SRCREV` to be on `master`. This repo only has `main`, so the fetch would fail on Kirkstone itself. The recipe sets `branch=main` from the start, so this break cannot occur | n/a (5.2 rule) | [5.2: Branch parameter now required](https://docs.yoctoproject.org/migration-guides/migration-5.2.html#git-fetcher-branch-parameter-now-required-in-src-uri) |
 | 4 | `demod_git.bb`: `DEPENDS = "systemd pkgconfig-native"` with no `inherit pkgconfig`; the Makefile calls `pkg-config --cflags --libs libsystemd` | `PKG_CONFIG_PATH`/`PKG_CONFIG_SYSROOT_DIR` are no longer exported globally, so pkg-config does not find the target `libsystemd`, and the `pkgconfig` recipe is replaced by `pkgconf`. Fix: `inherit pkgconfig`, drop `pkgconfig-native` | 6.0 | [6.0: pkgconfig variables no longer exported](https://docs.yoctoproject.org/migration-guides/migration-6.0.html#ref-classes-pkgconfig-related-variables-are-no-longer-automatically-exported); [6.0 Removed recipes (pkgconfig)](https://docs.yoctoproject.org/migration-guides/migration-6.0.html#removed-recipes) |
 | 5 | `demod_git.bb`: `PV = "1.0+git${SRCPV}"` | No break expected: `SRCPV` is still defined as `""` in Wrynose `bitbake.conf`. Clean-up only, recorded as "no break" | 5.0 / 6.0 | [4.3: Versioning changes](https://docs.yoctoproject.org/migration-guides/migration-4.3.html#versioning-changes) |
@@ -83,7 +84,7 @@ the `0x` form, so the 5.2 [UBOOT_ENTRYPOINT change](https://docs.yoctoproject.or
 should not bite, and the plan does not fake it.
 
 **Considered and left out** (guide items that our layer does not use, so they cannot honestly break):
-patch Upstream-Status QA ([4.2](https://docs.yoctoproject.org/migration-guides/migration-4.2.html#patch-qa-checks), [4.3](https://docs.yoctoproject.org/migration-guides/migration-4.3.html#layername-override-implications)) because we carry no patches;
+patch Upstream-Status QA ([4.2](https://docs.yoctoproject.org/migration-guides/migration-4.2.html#patch-qa-checks), [4.3](https://docs.yoctoproject.org/migration-guides/migration-4.3.html#layername-override-implications)) because the layer carries no recipe patches (the one oe-core patch, W10, came later and is applied by kas, not by a recipe);
 `CVE_CHECK_IGNORE` → `CVE_STATUS` ([4.3](https://docs.yoctoproject.org/migration-guides/migration-4.3.html#deprecated-variables)) because inventing a CVE ID would be fabricated;
 WIC file location ([6.0](https://docs.yoctoproject.org/migration-guides/migration-6.0.html#wic-kickstart-files-to-be-moved-under-files-wic)) because we have no WKS files;
 multiple git revisions per URL ([5.2](https://docs.yoctoproject.org/migration-guides/migration-5.2.html#git-fetcher-support-for-multiple-revisions-per-url-removed)).
