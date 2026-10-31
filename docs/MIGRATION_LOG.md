@@ -40,7 +40,8 @@ expected to break in session 4. Evidence: `logs/scarthgap-evidence.txt`.
   options (`CONFIG_SOFT_WATCHDOG`, `CONFIG_IKCONFIG_PROC`), so it does not depend on the kernel
   version. Setting `BB_DANGLINGAPPENDS_WARNONLY` would only hide the error, and 5.2 removes it.
 - **Guide:** [4.3: Removed recipes (linux-yocto 5.15)](https://docs.yoctoproject.org/migration-guides/migration-4.3.html#removed-recipes);
-  [5.0: Removed recipes](https://docs.yoctoproject.org/migration-guides/migration-5.0.html#removed-recipes)
+  [5.0: Removed recipes](https://docs.yoctoproject.org/migration-guides/migration-5.0.html#removed-recipes);
+  [5.2: Removed variables](https://docs.yoctoproject.org/migration-guides/migration-5.2.html#removed-variables) (`BB_DANGLINGAPPENDS_WARNONLY`)
 
 ### S3. systemd skipped: missing `usrmerge`
 
@@ -84,7 +85,7 @@ expected to break in session 4. Evidence: `logs/scarthgap-evidence.txt`.
 
 ## Wrynose 6.0.4
 
-Wrynose has no Poky repository. `kas/wrynose.yml` checks out `bitbake` (branch 2.18),
+Wrynose has no Poky repository ([5.3: the Poky repository master branch is no longer updated](https://docs.yoctoproject.org/migration-guides/migration-5.3.html#the-poky-repository-master-branch-is-no-longer-updated)). `kas/wrynose.yml` checks out `bitbake` (branch 2.18),
 `openembedded-core` and `meta-yocto` separately, and kas 5.5 is used because its Debian 13 image
 is on the Wrynose supported-host list (PLAN.md section 3).
 
@@ -321,7 +322,8 @@ Evidence: `logs/wrynose-evidence.txt`.
   on disk. Every later run picks a new timestamp, so the failure repeats until the image is
   rebuilt. The line came from commit `b9f060ea6d` ("sbom-cve-check: Fix breakage with empty
   IMAGE_LINK_NAME"), cherry-picked to wrynose, which replaced `${IMAGE_LINK_NAME}` with
-  `${IMAGE_NAME}`. Upstream master and wrynose still had this line on 2026-10-31.
+  `${IMAGE_NAME}`. Upstream master and wrynose still had this line in our clone (newest commits 2026-10-30 and
+  2026-10-27; `logs/host-and-tools-evidence.txt`).
 - **Fix:** `patches/openembedded-core/0001-sbom-cve-check-read-the-SBOM-through-IMAGE_LINK_NAME.patch`,
   applied by kas (`patches:` in `kas/wrynose.yml`). It reads the SBOM through `IMAGE_LINK_NAME`
   when that is set and keeps `IMAGE_NAME` for the empty-link case that `b9f060ea6d` fixed. With the
