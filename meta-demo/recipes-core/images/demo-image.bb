@@ -1,5 +1,6 @@
 # SPDX-License-Identifier: MIT
 SUMMARY = "Demo product image with the demod daemon"
+DESCRIPTION = "Minimal systemd image: the core boot packages plus the demod daemon."
 LICENSE = "MIT"
 
 IMAGE_INSTALL = "packagegroup-core-boot demod ${CORE_IMAGE_EXTRA_INSTALL}"

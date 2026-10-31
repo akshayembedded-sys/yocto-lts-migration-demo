@@ -90,3 +90,14 @@ Linux qemuarm64 6.18.52-yocto-standard #1 SMP PREEMPT Wed Sep 23 03:10:06 UTC 20
 BOOT_LOGIN_PROMPT=yes
 BOOT_DEMOD_RUNNING=yes
 BOOT_TEST_EXIT=0
+
+## Re-check after the oelint-adv fixes (session 6): logs/wrynose-20261031-222559.log, logs/wrynose-boot-20261031-223026.log
+NOTE: Tasks Summary: Attempted 5773 tasks of which 5719 didn't need to be rerun and all succeeded.
+BUILD_EXIT=0
+IMAGE_SIZE_BYTES=36321265
+IMAGE_UNCOMPRESSED_BYTES=161427456
+qemuarm64 login: root
+     Active: active (running) since Sat 2026-10-31 17:00:36 UTC; 10s ago
+CONFIG_SOFT_WATCHDOG=y
+Linux qemuarm64 6.18.52-yocto-standard #1 SMP PREEMPT Wed Sep 23 03:10:06 UTC 2026 aarch64 GNU/Linux
+boot-test.sh exit status (recorded by the tmux wrapper): BOOT_RC=0
