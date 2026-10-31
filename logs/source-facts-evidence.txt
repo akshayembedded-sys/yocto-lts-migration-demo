@@ -1,0 +1,56 @@
+# Source-code facts cited in docs/, as grep output from our own checkouts (paths relative to each checkout).
+# Wrynose oe-core = kas work dir at yocto-6.0.4 (+W10 patch), bitbake = 51fd94a6 (yocto-6.0.4); recorded 2026-10-31
+## Wrynose oe-core
+221:do_compile[depends] += "virtual/kernel:do_deploy"
+150:KERNEL_DEPLOY_DEPEND ?= "virtual/kernel:do_deploy"
+151:do_build[depends] += "${KERNEL_DEPLOY_DEPEND}"
+1052:                    bb.warn("""Sstate directory is shared between several builds (it is set via SSTATE_DIR to {}),
+1446:        bb.fatal('Recipes that set S = "${WORKDIR}/git" or S = "${UNPACKDIR}/git" should remove that assignment, as S set by bitbake.conf in oe-core now works.')
+12:IMAGE_VERSION_SUFFIX ?= "-${DATETIME}"
+13:IMAGE_VERSION_SUFFIX[vardepsexclude] += "DATETIME SOURCE_DATE_EPOCH"
+37:    if bb.data.inherits_class('deploy', d) and d.getVar("IMAGE_VERSION_SUFFIX") == "-${DATETIME}":
+13:python do_sbom_cve_check() {
+23:    sbom_path = os.path.join(d.getVar("DEPLOY_DIR_IMAGE"), (link_name or image_name) + ".spdx.json")
+24:    run_sbom_cve_check(d, sbom_path, image_name, link_name)
+27:addtask do_sbom_cve_check after do_create_image_sbom_spdx before do_build
+(sbom-cve-check.bbclass above is the patched kas copy; unpatched yocto-6.0.4 line 17:)
+    sbom_path = d.expand("${DEPLOY_DIR_IMAGE}/${IMAGE_NAME}.spdx.json")
+738:#     into your local.conf
+816:include conf/toolcfg.conf
+817:include conf/local.conf
+822:addfragments ${OE_FRAGMENTS_PREFIX} OE_FRAGMENTS OE_FRAGMENTS_METADATA_VARS OE_FRAGMENTS_BUILTIN
+828:include conf/distro/${DISTRO}.conf
+417:UNPACKDIR ??= "${WORKDIR}/sources"
+418:BB_GIT_DEFAULT_DESTSUFFIX = "${BP}"
+421:S = "${UNPACKDIR}/${BP}"
+## Wrynose bitbake (lib/bb/fetch2/git.py)
+666:        def_destsuffix = (d.getVar("BB_GIT_DEFAULT_DESTSUFFIX") or "git") + "/"
+670:            def_destsuffix = "%s/" % os.path.basename(subpath.rstrip('/'))
+680:            def_destsuffix = ""
+682:        destsuffix = ud.parm.get("destsuffix", def_destsuffix)
+## Scarthgap poky 4fb7016a
+linux-yocto_6.6.bb
+## bitbake-setup oe-core ae5a301
+    sbom_path = d.expand("${DEPLOY_DIR_IMAGE}/${IMAGE_NAME}.spdx.json")
+## NXP sources (repo sync of imx-6.6.36-2.1.0 + meta-imx-frdm imx-frdm-4.0)
+imx91-11x11-lpddr4-evk.conf
+imx91-9x9-lpddr4-qsb.conf
+imx91evk.conf
+imx91-11x11-lpddr4-frdm.conf
+imx91-11x11-lpddr4-frdm-imx91s.conf
+imx91frdm.conf
+imx91frdmimx91s.conf
+10:# For most users, the dedicated machine imx91-11x11-lpddr4-frdm.conf should be used for simplicity.
+39:POKY_INIT_MANAGER = "systemd"
+## FRDM-IMX91 deploy dir (names only)
+imx91-11x11-frdm.dtb
+$ cat demo-image-imx-imx-boot-bootpart.wks (non-comment lines)
+part u-boot --source rawcopy --sourceparams="file=imx-boot" --ondisk mmcblk --no-table --align 32
+part /boot --source bootimg-partition --ondisk mmcblk --fstype=vfat --label boot --active --align 8192 --size 64
+part / --source rootfs --ondisk mmcblk --fstype=ext4 --label root --align 8192
+bootloader --ptable msdos
+## kas 5.5 image entrypoint: docker run --rm --entrypoint cat ghcr.io/siemens/kas/kas:5.5 /container-entrypoint | grep -n ...
+203:	build|checkout|clean*|diff|dump|for-all-repos|lock|menu|purge|shell|-*)
+216:		if [ -n "$USER_ID" ]; then
+217:			echo "kas-container: this container does not support \"kas $1\"" >&2
+222:		exec $GOSU "$@"
