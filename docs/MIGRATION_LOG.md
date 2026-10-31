@@ -1,7 +1,8 @@
 # Migration log
 
 One entry per break, in the order it appeared in our own build logs. Each entry has the release,
-the exact error text, the root cause, the fix and the migration-guide link. Warnings are fixed at
+the exact error text, the root cause, the fix and the migration-guide link. The source-code lines
+cited below (class and fetcher line numbers) are recorded in `logs/source-facts-evidence.txt`. Warnings are fixed at
 their cause; nothing is silenced.
 
 ## Scarthgap 5.0.21
@@ -114,8 +115,7 @@ Evidence: `logs/wrynose-evidence.txt`.
 
 ### W1. Layer series not compatible
 
-- **Log:** `logs/wrynose-20261031-113727.log` (attempt 1, failed at parse after 156 s, most of it the
-  three git clones)
+- **Log:** `logs/wrynose-20261031-113727.log` (attempt 1, failed at parse after 156 s: about 100 s pulling the kas 5.5 image, then about 55 s for the three git clones and the parse)
 - **Error:**
   ```
   ERROR: Layer demo is not compatible with the core layer which only supports these series: wrynose (layer is compatible with scarthgap)
@@ -159,7 +159,7 @@ Evidence: `logs/wrynose-evidence.txt`.
   `do_compile[depends] += "virtual/kernel:do_deploy"`).
 - **Fix:** in `demo.conf`, `KERNEL_CLASSES += "kernel-fit-extra-artifacts"` and
   `KERNEL_DEPLOY_DEPEND = "linux-yocto-fitimage:do_deploy"` (the image's `do_build` depends on it,
-  per `image.bbclass` line 150). The `KERNEL_IMAGETYPE`, `KERNEL_IMAGETYPES += "Image"` and
+  per `image.bbclass` line 151). The `KERNEL_IMAGETYPE`, `KERNEL_IMAGETYPES += "Image"` and
   `QB_DEFAULT_KERNEL = "Image"` lines are removed: they only existed because `KERNEL_IMAGETYPE`
   was `fitImage`, and qemuarm64 already sets `KERNEL_IMAGETYPE = "Image"`, which `qemuboot.bbclass`
   uses as the default kernel. `UBOOT_LOADADDRESS`/`UBOOT_ENTRYPOINT` stay; `kernel-fit-image`
