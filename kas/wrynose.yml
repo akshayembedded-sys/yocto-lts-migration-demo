@@ -1,0 +1,53 @@
+# SPDX-License-Identifier: MIT
+# Wrynose has no Poky repository: bitbake, openembedded-core and meta-yocto are separate.
+header:
+  version: 14
+
+machine: qemuarm64
+distro: demo
+target: demo-image
+
+repos:
+  meta-demo:
+    layers:
+      meta-demo:
+
+  bitbake:
+    url: https://git.openembedded.org/bitbake
+    branch: "2.18"
+    commit: 51fd94a67fa17650a9ff623492005972bbc7d26f  # yocto-6.0.4
+    layers:
+      .: disabled
+
+  openembedded-core:
+    url: https://git.openembedded.org/openembedded-core
+    branch: wrynose
+    commit: 0f03c732a0a2d0506b41b1abe60b3f368b2300dc  # yocto-6.0.4
+    layers:
+      meta:
+    patches:
+      # upstream regression in 6.0.4, see docs/MIGRATION_LOG.md W10
+      sbom-link-name:
+        repo: meta-demo
+        path: patches/openembedded-core/0001-sbom-cve-check-read-the-SBOM-through-IMAGE_LINK_NAME.patch
+
+  meta-yocto:
+    url: https://git.yoctoproject.org/meta-yocto
+    branch: wrynose
+    commit: 7c25b11156553145fa6b241a2d4f65d94438f804  # yocto-6.0.4
+    layers:
+      meta-poky:
+      meta-yocto-bsp:
+
+local_conf_header:
+  demo: |
+    INHERIT += "rm_work"
+    RM_WORK_EXCLUDE += "demod"
+    # SSTATE_DIR is shared, so keep the hash equivalence database next to it
+    BB_HASHSERVE_DB_DIR = "${SSTATE_DIR}"
+  cve: |
+    # read by addfragments in bitbake.conf, which runs before the distro conf is included
+    OE_FRAGMENTS += "core/yocto/sbom-cve-check"
+  test-login: |
+    # passwordless root on the serial console, for scripts/boot-test.sh only
+    OE_FRAGMENTS += "core/yocto/root-login-with-empty-password"

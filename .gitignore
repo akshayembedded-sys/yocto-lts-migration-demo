@@ -35,3 +35,6 @@ demod/*.o
 *.swp
 *~
 .~lock.*#
+
+# Python bytecode
+__pycache__/
