@@ -1,6 +1,6 @@
 # Yocto LTS migration demo: Kirkstone → Scarthgap → Wrynose
 
-Public portfolio repo by Akshay Pandekar (embedded Linux / Yocto consultant).
+Public portfolio repo by Akshay P (embedded Linux / Yocto consultant).
 Goal: show, with real build and boot logs, what breaks when a small product layer moves
 from Yocto 4.0 Kirkstone (end of life April 2026) to 5.0 Scarthgap and 6.0 Wrynose, and how each break is fixed.
 Readers are engineering managers at device makers and BSP hiring managers.
