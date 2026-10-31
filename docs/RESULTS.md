@@ -37,16 +37,37 @@ had all five, because the demo distro requires `poky.conf`. We kept the Wrynose 
 not opt anything out, so the size and time above include them.
 CVE output is now `demo-image-qemuarm64.rootfs.sbom-cve-check.yocto.json` (34.3 MB, not committed).
 
-## Disk use after all three builds
+## Rebuilt from the committed refs (session 6)
 
-Measured with `du -sh` on 2026-10-31, after session 4 (`rm_work` is on for all builds):
+The success rows above were first built from the working tree, before the fixes were committed.
+In session 6, each ref was built and boot-tested again from a fresh `git clone`. The kas log names
+the exact commit (`logs/verify-evidence.txt`):
+
+| Ref | Commit | Tasks | Image | Boot test |
+|---|---|---|---|---|
+| `scarthgap-migrated` | `4ffd433df8` | 5735, all succeeded | 139,569,152 bytes ext4 | pass, kernel 6.6.151 |
+| `wrynose-migrated` | `0e367e7f8e` | 5773, all succeeded | 161,427,456 bytes uncompressed | pass, kernel 6.18.52 |
+| `main` | `5f14096992` | 5773, all succeeded | 161,427,456 bytes uncompressed | pass, kernel 6.18.52 |
+
+The uncompressed images are byte-for-byte the same size as the first builds. The `.ext4.zst` size
+changes slightly from build to build: 36,321,026, 36,321,376 and 36,321,086 bytes. `DISTRO_FEATURES`
+in docs/VERSIONS.md and the comparison above were read in these runs.
+
+## Disk use
+
+Measured with `du -sh` on 2026-10-31, after session 6 (`logs/host-and-tools-evidence.txt`):
 
 | Path | Size |
 |---|---|
 | `~/yocto-cache/downloads` (DL_DIR, shared) | 21 G |
-| `~/yocto-cache/sstate` (SSTATE_DIR, shared) | 12 G |
+| `~/yocto-cache/sstate` (SSTATE_DIR, shared) | 17 G |
 | Kirkstone `build/tmp` | 7.2 G |
 | Scarthgap `build/tmp` | 13 G |
 | Wrynose `build/tmp` | 26 G |
 | kas work dirs (layer clones), all three | 0.9 G |
-| **Total** | **about 80 G** (PLAN.md estimated 115–180 G) |
+| bitbake-setup build (docs/BITBAKE-SETUP.md) | 26 G |
+| FRDM-IMX91 build, including its own downloads and sstate (docs/IMX91.md) | 78 G |
+| **Total** (`~/yocto-cache` 38 G + `~/yocto-builds` 149 G) | **about 187 G** |
+
+The three QEMU builds plus the shared caches come to about 85 G. PLAN.md estimated 115–180 G for those.
+The FRDM-IMX91 build is large because it ran without `rm_work` (docs/IMX91.md).

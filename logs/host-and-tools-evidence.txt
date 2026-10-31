@@ -1,0 +1,45 @@
+# Host, tool and file facts cited in docs/, recorded 2026-10-31 22:45 IST with the commands shown
+$ grep PRETTY_NAME /etc/os-release; nproc; free -g | awk "/Mem:/{print \$2}"; docker --version
+PRETTY_NAME="Ubuntu 24.04.5 LTS"
+32
+62 GiB total (free -g)
+Docker version 29.8.2, build 7fc2dff
+$ df -h ~ | tail -1
+/dev/nvme0n1p2  1.9T  462G  1.3T  26% /
+$ sha256sum ~/yocto-cache/tools/kas-container-*
+b6973af0ca87da02defc4637479af4d0c01dc9a3f29b44842c5db99f9f498d2c  ~/yocto-cache/tools/kas-container-4.8.2
+7a8186f18d14ec6bec3f8d5188eba7a60f1ef4b5587af15917527588cc7d738a  ~/yocto-cache/tools/kas-container-5.5
+$ docker image inspect --format '{{index .RepoDigests 0}}' ghcr.io/siemens/kas/kas:4.8.2
+ghcr.io/siemens/kas/kas@sha256:fd0000890ccf7c8091239e1df9aa46af7721b6e4d992be0ce3d178d17ffcebff
+$ docker run --rm --entrypoint sh ghcr.io/siemens/kas/kas:4.8.2 -c 'cat /etc/debian_version; python3 --version'
+12.11
+Python 3.11.2
+$ docker image inspect --format '{{index .RepoDigests 0}}' ghcr.io/siemens/kas/kas:5.5
+ghcr.io/siemens/kas/kas@sha256:4b210b0be3c887875973c4f4c35470b4ecf3edd2346c9de1bdd33feae5b86e94
+$ docker run --rm --entrypoint sh ghcr.io/siemens/kas/kas:5.5 -c 'cat /etc/debian_version; python3 --version'
+13.6
+Python 3.13.5
+$ git -C <wrynose kas work>/openembedded-core describe --tags; grep SRCREV meta/recipes-kernel/linux/linux-yocto_6.18.bb
+yocto-6.0.4-1-gd3e7f2094e   (yocto-6.0.4 plus the W10 patch, which kas applies as a commit)
+21:SRCREV_machine:qemuarm64 ?= "364c4b44ab2dcc7dfff16076522b62827bcb0e7d"
+30:SRCREV_machine ?= "364c4b44ab2dcc7dfff16076522b62827bcb0e7d"
+31:SRCREV_meta ?= "2184786cc3deed04926e1cca6c320ed9314da9da"
+$ git -C <kirkstone kas work>/poky describe --tags; grep SRCREV meta/recipes-kernel/linux/linux-yocto_5.15.bb
+yocto-4.0.35
+18:SRCREV_machine:qemuarm64 ?= "8634ca1dd87be9b55bd383dc8636b73b82a28051"
+27:SRCREV_meta ?= "b75d71b7f2455467f2260d514040ccb44d4bdda5"
+$ stat -Lc "%s %n" <scarthgap deploy>/demo-image-qemuarm64.rootfs.cve
+25920712 ~/yocto-builds/scarthgap/build/tmp/deploy/images/qemuarm64/demo-image-qemuarm64.rootfs.cve
+$ du -sh <imx91 build>/tmp/work
+64G	~/yocto-builds/imx91/build-frdm-imx91/tmp/work
+$ cd ~ && du -sh yocto-cache/downloads yocto-cache/sstate yocto-builds/{kirkstone,scarthgap,wrynose}/build/tmp yocto-builds/bitbake-setup yocto-builds/imx91; du -shc yocto-builds/*/work | tail -1; du -sh yocto-cache yocto-builds   (after session 6)
+21G	yocto-cache/downloads
+17G	yocto-cache/sstate
+7.2G	yocto-builds/kirkstone/build/tmp
+13G	yocto-builds/scarthgap/build/tmp
+26G	yocto-builds/wrynose/build/tmp
+26G	yocto-builds/bitbake-setup
+78G	yocto-builds/imx91
+906M	total
+38G	yocto-cache
+149G	yocto-builds

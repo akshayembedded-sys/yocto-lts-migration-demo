@@ -1,0 +1,55 @@
+# Session 6: each ref built and boot-tested from a fresh 'git clone' of this repo (clean tree), so the
+# results below belong to the committed content. Driver: clone, checkout <ref>, scripts/build.sh, scripts/boot-test.sh,
+# then kas-container shell ... bitbake-getvar --value DISTRO_FEATURES. Full logs (local only): logs/verify-*.log
+
+## scarthgap-migrated: logs/verify-scarthgap-migrated-20261031-224251.log
+VERIFY_REF=scarthgap-migrated VERIFY_COMMIT=4ffd433df88ef329e2f33ce2e7a5d757e96812ec uncommitted files in clone: 0
+meta-demo            = "HEAD:4ffd433df88ef329e2f33ce2e7a5d757e96812ec"
+NOTE: Tasks Summary: Attempted 5735 tasks of which 5087 didn't need to be rerun and all succeeded.
+BUILD_EXIT=0
+IMAGE_SIZE_BYTES=139569152
+VERIFY_BUILD_RC=0
+VERIFY_BOOT_RC=0
+DISTRO_FEATURES=acl alsa bluetooth debuginfod ext2 ipv4 ipv6 pcmcia usbgadget usbhost wifi xattr nfs zeroconf pci 3g nfc x11 vfat seccomp opengl ptest multiarch wayland vulkan systemd usrmerge
+boot log: logs/verify-scarthgap-migrated-scarthgap-boot-20261031-2244.log
+qemuarm64 login: root
+     Active: active (running) since Sat 2026-10-31 17:14:32 UTC; 4s ago
+CONFIG_SOFT_WATCHDOG=y
+Linux qemuarm64 6.6.151-yocto-standard #1 SMP PREEMPT Tue Aug 18 18:50:33 UTC 2026 aarch64 GNU/Linux
+(this tag's boot-test.sh prints BOOT_* to stdout only; from the summary log:) BOOT_TEST_EXIT=0
+
+## wrynose-migrated: logs/verify-wrynose-migrated-20261031-224440.log
+VERIFY_REF=wrynose-migrated VERIFY_COMMIT=0e367e7f8e6582be4a00461c989c25418a032014 uncommitted files in clone: 0
+meta-demo            = "HEAD:0e367e7f8e6582be4a00461c989c25418a032014"
+NOTE: Tasks Summary: Attempted 5773 tasks of which 5749 didn't need to be rerun and all succeeded.
+BUILD_EXIT=0
+IMAGE_SIZE_BYTES=36321376
+IMAGE_UNCOMPRESSED_BYTES=161427456
+VERIFY_BUILD_RC=0
+VERIFY_BOOT_RC=0
+DISTRO_FEATURES= systemd usrmerge acl alsa bluetooth debuginfod ext2 ipv4 ipv6 wifi xattr nfs zeroconf pci 3g nfc x11 vfat seccomp pulseaudio gobject-introspection-data ldconfig opengl ptest multiarch wayland vulkan
+boot log: logs/verify-wrynose-migrated-wrynose-boot-20261031-2248.log
+qemuarm64 login: root
+     Active: active (running) since Sat 2026-10-31 17:18:28 UTC; 10s ago
+CONFIG_SOFT_WATCHDOG=y
+Linux qemuarm64 6.18.52-yocto-standard #1 SMP PREEMPT Wed Sep 23 03:10:06 UTC 2026 aarch64 GNU/Linux
+(this tag's boot-test.sh prints BOOT_* to stdout only; from the summary log:) BOOT_TEST_EXIT=0
+
+## main: logs/verify-main-20261031-224841.log
+VERIFY_REF=main VERIFY_COMMIT=5f1409699225aedead69265b27df25255467ec90 uncommitted files in clone: 0
+meta-demo            = "main:5f1409699225aedead69265b27df25255467ec90"
+NOTE: Tasks Summary: Attempted 5773 tasks of which 5688 didn't need to be rerun and all succeeded.
+BUILD_EXIT=0
+IMAGE_SIZE_BYTES=36321086
+IMAGE_UNCOMPRESSED_BYTES=161427456
+VERIFY_BUILD_RC=0
+VERIFY_BOOT_RC=0
+DISTRO_FEATURES= systemd usrmerge acl alsa bluetooth debuginfod ext2 ipv4 ipv6 wifi xattr nfs zeroconf pci 3g nfc x11 vfat seccomp pulseaudio gobject-introspection-data ldconfig opengl ptest multiarch wayland vulkan
+boot log: logs/verify-main-wrynose-boot-20261031-225613.log
+qemuarm64 login: root
+     Active: active (running) since Sat 2026-10-31 17:26:24 UTC; 10s ago
+CONFIG_SOFT_WATCHDOG=y
+Linux qemuarm64 6.18.52-yocto-standard #1 SMP PREEMPT Wed Sep 23 03:10:06 UTC 2026 aarch64 GNU/Linux
+BOOT_LOGIN_PROMPT=yes
+BOOT_DEMOD_RUNNING=yes
+BOOT_TEST_EXIT=0
