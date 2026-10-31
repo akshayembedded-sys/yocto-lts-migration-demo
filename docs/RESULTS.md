@@ -1,7 +1,7 @@
 # Measured results
 
 All numbers come from our own logs. The trimmed evidence for each release is in `logs/<release>-evidence.txt`.
-Host: Ubuntu 24.04.5, 32 CPUs, 62 GB RAM. Builds start from empty DL_DIR and SSTATE_DIR unless noted.
+Host: Ubuntu 24.04.5, 32 CPUs, 62 GiB RAM. Each first build starts from an empty SSTATE_DIR (see the `Sstate summary` lines in the evidence files).
 
 | Release | Build time (from scratch) | Tasks | `demo-image` ext4 size | Warnings | Breaks fixed | Boot test |
 |---|---|---|---|---|---|---|
@@ -16,7 +16,8 @@ the build. The full report is `demo-image-qemuarm64.cve` in the deploy dir (20.9
 **Scarthgap notes.** The build log shows `Sstate summary: Wanted 2423 Local 0 Mirrors 0 Missed 2423`,
 so every task was built from source. `DL_DIR` was not empty: it held the Kirkstone downloads, so
 sources whose versions did not change were not fetched again. The build time is therefore not
-directly comparable with the Kirkstone row, which started with an empty `DL_DIR` as well.
+directly comparable with the Kirkstone row, the first build on this host (its `DL_DIR` state was
+not recorded).
 The image grew by 33,402,880 bytes (+31.5%) over Kirkstone. This page records the size only; the
 cause was not measured (no buildhistory in these builds), so none is claimed here.
 The FIT image is still built by the `kernel-fitimage` class (AArch64, load/entry `0x40080000`), and
@@ -40,17 +41,20 @@ CVE output is now `demo-image-qemuarm64.rootfs.sbom-cve-check.yocto.json` (34.3 
 ## Rebuilt from the committed refs (session 6)
 
 The success rows above were first built from the working tree, before the fixes were committed.
-In session 6, each ref was built and boot-tested again from a fresh `git clone`. The kas log names
-the exact commit (`logs/verify-evidence.txt`):
+In session 6, `scripts/verify-refs.sh` built and boot-tested each ref again from a fresh `git clone`,
+with no uncommitted files. The kas log names the exact commit (`logs/verify-evidence.txt`). These runs
+reuse the release build dirs and the shared caches, so most tasks come from sstate. They prove that
+the committed content builds and boots. They are not new timings.
 
 | Ref | Commit | Tasks | Image | Boot test |
 |---|---|---|---|---|
+| `kirkstone-baseline` | `e3e2501869` | 4171, all succeeded | 106,166,272 bytes ext4 | pass, kernel 5.15.201 |
 | `scarthgap-migrated` | `4ffd433df8` | 5735, all succeeded | 139,569,152 bytes ext4 | pass, kernel 6.6.151 |
 | `wrynose-migrated` | `0e367e7f8e` | 5773, all succeeded | 161,427,456 bytes uncompressed | pass, kernel 6.18.52 |
-| `main` | `5f14096992` | 5773, all succeeded | 161,427,456 bytes uncompressed | pass, kernel 6.18.52 |
+| `main` | `1209987273` | 5773, all succeeded | 161,427,456 bytes uncompressed | pass, kernel 6.18.52 |
 
-The uncompressed images are byte-for-byte the same size as the first builds. The `.ext4.zst` size
-changes slightly from build to build: 36,321,026, 36,321,376 and 36,321,086 bytes. `DISTRO_FEATURES`
+The ext4 and uncompressed sizes are the same as in the first builds. The `.ext4.zst` size changes by
+a few hundred bytes from build to build (36,321,026 to 36,321,729 bytes in our logs). `DISTRO_FEATURES`
 in docs/VERSIONS.md and the comparison above were read in these runs.
 
 ## Disk use

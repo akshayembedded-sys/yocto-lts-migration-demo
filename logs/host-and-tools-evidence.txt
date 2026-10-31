@@ -43,3 +43,19 @@ $ cd ~ && du -sh yocto-cache/downloads yocto-cache/sstate yocto-builds/{kirkston
 906M	total
 38G	yocto-cache
 149G	yocto-builds
+$ git -C <scarthgap kas work>/poky describe --tags; rev-parse HEAD; grep SRCREV meta/recipes-kernel/linux/linux-yocto_6.6.bb
+yocto-5.0.21
+4fb7016a07507683359ebd620f1951fd5ea44bfa
+22:SRCREV_machine:qemuarm64 ?= "b96d2d770cab02b84c46606fa538ce027bee6b08"
+32:SRCREV_meta ?= "dd201eb6ec53179f45836d41610ca68c725d28e2"
+$ git -C <wrynose kas work>/bitbake describe --tags; rev-parse HEAD
+yocto-6.0.4
+51fd94a67fa17650a9ff623492005972bbc7d26f
+$ git -C <wrynose kas work>/meta-yocto describe --tags; rev-parse HEAD
+yocto-6.0.4
+7c25b11156553145fa6b241a2d4f65d94438f804
+$ git -C <wrynose kas work>/openembedded-core log -1 --format=%ci origin/master; git show origin/master:meta/classes-recipe/sbom-cve-check.bbclass | sed -n 17p; same for origin/wrynose
+2026-10-30 23:01:13 +0000
+    sbom_path = d.expand("${DEPLOY_DIR_IMAGE}/${IMAGE_NAME}.spdx.json")
+2026-10-27 08:03:41 +0100
+    sbom_path = d.expand("${DEPLOY_DIR_IMAGE}/${IMAGE_NAME}.spdx.json")

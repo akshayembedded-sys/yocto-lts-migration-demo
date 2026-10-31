@@ -15,7 +15,7 @@ predicted, and all 4 Scarthgap breaks.
 
 | | |
 |---|---|
-| Build host | Ubuntu 24.04.5, 32 CPUs, 62 GB RAM, Docker. Every build runs in a container whose distro the release supports |
+| Build host | Ubuntu 24.04.5, 32 CPUs, 62 GiB RAM, Docker. Every build runs in a container whose distro the release supports |
 | Kirkstone | poky `yocto-4.0.35` (`93431249a6`), kas 4.8.2 (Debian 12.11), linux-yocto 5.15.201 |
 | Scarthgap | poky `yocto-5.0.21` (`4fb7016a07`), kas 4.8.2 (Debian 12.11), linux-yocto 6.6.151 |
 | Wrynose | bitbake / openembedded-core / meta-yocto `yocto-6.0.4`, kas 5.5 (Debian 13.6), linux-yocto 6.18.52, plus one oe-core patch (W10) |
@@ -64,13 +64,13 @@ Each entry in [docs/MIGRATION_LOG.md](docs/MIGRATION_LOG.md) has the full error 
 
 ## Measured results
 
-From [docs/RESULTS.md](docs/RESULTS.md). The trimmed evidence is in `logs/*-evidence.txt`. The tags
-`scarthgap-migrated` and `wrynose-migrated`, and `main`, were each rebuilt and boot-tested from a clean
-clone (`logs/verify-evidence.txt`).
+From [docs/RESULTS.md](docs/RESULTS.md). The trimmed evidence is in `logs/*-evidence.txt`. All three tags
+and `main` were also rebuilt and boot-tested from a clean clone with `scripts/verify-refs.sh`, reusing
+sstate, to prove that the committed content builds (`logs/verify-evidence.txt`).
 
 | Release | Build time | Tasks | Image size | Breaks | Boot test |
 |---|---|---|---|---|---|
-| Kirkstone 4.0.35 | 9765 s, from scratch | 4171 | 106,166,272 B ext4 | 0 (baseline) | pass |
+| Kirkstone 4.0.35 | 9765 s, empty sstate | 4171 | 106,166,272 B ext4 | 0 (baseline) | pass |
 | Scarthgap 5.0.21 | 3446 s, empty sstate, downloads shared | 5735 | 139,569,152 B ext4 | 4 | pass, kernel 6.6.151 |
 | Wrynose 6.0.4 | about 5471 s, summed over attempts | 5773 | 161,427,456 B ext4 (about 36.3 MB `.ext4.zst`; varies by a few hundred bytes per build) | 10 | pass, kernel 6.18.52 |
 | FRDM-IMX91 (Scarthgap BSP) | 4090 s, empty sstate | 5015 | 309,748,736 B wic (43,924,056 B `.wic.zst`) | n/a | board boot pending |
