@@ -1,6 +1,6 @@
 # SPDX-License-Identifier: MIT
-# Lint only. Full Yocto builds stay local: one build needs tens of GB of disk and one to three hours
-# on 32 CPUs (docs/RESULTS.md), far beyond a hosted runner.
+# Lint only. Full Yocto builds stay local: one build needs tens of GB of disk and about one to three hours
+# on 32 CPUs (57 min to 2 h 43 min from empty sstate, docs/RESULTS.md), far beyond a hosted runner.
 name: lint
 
 on:

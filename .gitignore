@@ -32,13 +32,16 @@ imx-boot*
 *.sbom-cve-check.yocto.json
 modules-*.tgz
 bl31-*
-u-boot*
+u-boot*.bin*
+u-boot-imx-initial-env*
 *.qemuboot.conf
 *.testdata.json
-*.rootfs.json
-*.env
+*.rootfs*.json
+*-image-*.json
+linux_comp
+*-image*.env
 *.its
-*.wks
+*-bootpart.wks
 optee/
 
 # Full logs stay local; only trimmed evidence (*-evidence.txt) is committed
