@@ -10,7 +10,7 @@ set -euo pipefail
 setup_release "${1:-}"
 TIMEOUT="${2:-900}"
 
-LOG="$REPO_DIR/logs/$RELEASE-boot-$(date +%Y%m%d-%H%M).log"
+LOG="$REPO_DIR/logs/$RELEASE-boot-$(date +%Y%m%d-%H%M%S).log"
 
 cd "$REPO_DIR"
 set +e
