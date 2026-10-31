@@ -15,7 +15,7 @@ container images, kernel SRCREVs) and `logs/verify-evidence.txt` (`DISTRO_FEATUR
 | kas / kas-container | 4.8.2, script sha256 `b6973af0ca87da02defc4637479af4d0c01dc9a3f29b44842c5db99f9f498d2c` |
 | Container image | `ghcr.io/siemens/kas/kas@sha256:fd0000890ccf7c8091239e1df9aa46af7721b6e4d992be0ce3d178d17ffcebff` |
 | Container distro | Debian 12.11, which is on the [Kirkstone supported list](https://docs.yoctoproject.org/kirkstone/ref-manual/system-requirements.html#supported-linux-distributions) |
-| Build host | Ubuntu 24.04.5, 32 CPUs, 62 GB RAM, Docker 29.8.2 |
+| Build host | Ubuntu 24.04.5, 32 CPUs, 62 GiB RAM, Docker 29.8.2 |
 
 Sources: `kas-container dump kas/kirkstone.yml` (poky checkout),
 `bitbake -e virtual/kernel | grep ^PV=`, `docker image inspect`, `/etc/debian_version` inside the image.

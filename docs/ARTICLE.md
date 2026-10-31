@@ -46,7 +46,7 @@ Kirkstone file name hard-coded, could not find the image. The script now asks Bi
 
 ## Scarthgap to Wrynose: ten breaks, two not predicted
 
-Wrynose changes more. It has no Poky repository: BitBake, openembedded-core and meta-yocto are
+Wrynose changes more. It has no Poky repository ([5.3](https://docs.yoctoproject.org/migration-guides/migration-5.3.html#the-poky-repository-master-branch-is-no-longer-updated)): BitBake, openembedded-core and meta-yocto are
 separate checkouts. It took ten fixes, and eight of them were in the guides.
 
 **Removed classes** ([6.0](https://docs.yoctoproject.org/migration-guides/migration-6.0.html#cve-check-class-removed), [5.3](https://docs.yoctoproject.org/migration-guides/migration-5.3.html#fitimage-no-longer-supported-for-kernel-imagetype)). The `cve-check` class is gone. Scanning is now done by `sbom-cve-check` on the SPDX
@@ -114,6 +114,6 @@ each step. I did not measure why, so I am not claiming a cause.
 5. **Tag each release before you move on.** The layer can only target one series at a time, so the
    tags are the only way to rebuild the old versions.
 
-Wrynose also brings `bitbake-setup`, the official alternative to kas. I built the same image with it
+Wrynose also brings `bitbake-setup`, the official alternative to kas ([Quick Build](https://docs.yoctoproject.org/wrynose/brief-yoctoprojectqs/index.html)). I built the same image with it
 once. One thing to know: its default `poky-wrynose` configuration follows branch heads, not the release
 tag. So if you need a reproducible build, record the revisions it writes out.

@@ -1,7 +1,7 @@
 # PLAN: Yocto LTS migration demo (Kirkstone → Scarthgap → Wrynose)
 
-Status: Session 1 output, kept as written then, apart from corrections marked "(corrected)".
-What actually happened is in `docs/MIGRATION_LOG.md` and `docs/RESULTS.md`. Every "predicted break" below cites the
+Status: Session 1 output. Later sessions corrected some commands and facts in it; `git log -p -- PLAN.md`
+shows each change. What actually happened is in `docs/MIGRATION_LOG.md` and `docs/RESULTS.md`. Every "predicted break" below cites the
 migration-guide section that predicts it. A prediction counts only once our own log confirms it
 (sessions 3 and 4). Sources were read on 2026-10-30.
 
