@@ -1,0 +1,64 @@
+# Scarthgap 5.0.21 evidence (trimmed from the full logs, which are not committed)
+
+## Build attempts (scripts/build.sh scarthgap)
+### attempt 1: logs/scarthgap-20261031-1008.log
+ERROR: Layer demo is not compatible with the core layer which only supports these series: scarthgap (layer is compatible with kirkstone)
+BUILD_EXIT=2
+BUILD_SECONDS=62
+### attempt 2: logs/scarthgap-20261031-1009.log
+ERROR: No recipes in default available for:
+/build/../repo/meta-demo/recipes-kernel/linux/linux-yocto_5.15.bbappend
+BUILD_EXIT=2
+BUILD_SECONDS=26
+### attempt 3: log overwritten by attempt 4 (see MIGRATION_LOG.md S3); error copied from its output
+systemd was skipped: missing required distro feature 'usrmerge' (not in DISTRO_FEATURES)
+BUILD_EXIT=2
+### attempt 4: logs/scarthgap-20261031-1010.log (full build, empty sstate)
+Sstate summary: Wanted 2423 Local 0 Mirrors 0 Missed 2423 Current 0 (0% match, 0% complete)
+NOTE: Tasks Summary: Attempted 5735 tasks of which 0 didn't need to be rerun and all succeeded.
+Summary: There were 29 WARNING messages.
+BUILD_RELEASE=scarthgap
+BUILD_EXIT=0
+BUILD_SECONDS=3446
+IMAGE_FILE=not found: /home/akshay-p/yocto-builds/scarthgap/build/tmp/deploy/images/qemuarm64/demo-image-qemuarm64.ext4
+warnings: 23 cve-check unpatched CVE, 6 upstream fetch fell back to mirror, 0 other
+### attempt 5: logs/scarthgap-20261031-110911.log (fixed build.sh, from sstate)
+NOTE: Tasks Summary: Attempted 5735 tasks of which 5087 didn't need to be rerun and all succeeded.
+BUILD_RELEASE=scarthgap
+BUILD_EXIT=0
+BUILD_SECONDS=89
+IMAGE_FILE=/home/akshay-p/yocto-builds/scarthgap/build/tmp/deploy/images/qemuarm64/demo-image-qemuarm64.rootfs-20261031053913.ext4
+IMAGE_SIZE_BYTES=139569152
+
+## Deploy dir
+46 Oct 31 11:10 demo-image-qemuarm64.rootfs.cve -> demo-image-qemuarm64.rootfs-20261031053913.cve
+47 Oct 31 11:10 demo-image-qemuarm64.rootfs.ext4 -> demo-image-qemuarm64.rootfs-20261031053913.ext4
+76 Oct 31 10:48 fitImage -> fitImage--6.6.151+git0+dd201eb6ec_b96d2d770c-r0-qemuarm64-20261031044117.bin
+73 Oct 31 10:48 Image -> Image--6.6.151+git0+dd201eb6ec_b96d2d770c-r0-qemuarm64-20261031044117.bin
+
+## FIT image (dumpimage -l fitImage)
+FIT description: Kernel fitImage for Demo industrial distro/6.6.151+git/qemuarm64
+ Image 0 (kernel-1)
+  Type:         Kernel Image
+  Compression:  gzip compressed
+  Data Size:    8935836 Bytes = 8726.40 KiB = 8.52 MiB
+  Architecture: AArch64
+  Load Address: 0x40080000
+  Entry Point:  0x40080000
+ Default Configuration: 'conf-1'
+
+## usrmerge (debugfs -R 'stat /bin' on the rootfs ext4)
+Inode: 13   Type: symlink    Mode:  0777   Flags: 0x0
+
+## Boot test (logs/scarthgap-boot-20261031-1110.log, runqemu qemuarm64 nographic slirp)
+qemuarm64 login: root
+     Active: active (running) since Sat 2026-10-31 05:40:58 UTC; 4s ago
+   Main PID: 199 (demod)
+     Status: "sample 1"
+Oct 31 05:40:58 qemuarm64 demod[199]: demod: sample=1 loadavg="0.56 0.12 ....84"
+active
+CONFIG_SOFT_WATCHDOG=y
+Linux qemuarm64 6.6.151-yocto-standard #1 SMP PREEMPT Tue Aug 18 18:50:33 UTC 2026 aarch64 GNU/Linux
+BOOT_LOGIN_PROMPT=yes
+BOOT_DEMOD_RUNNING=yes
+BOOT_TEST_EXIT=0
