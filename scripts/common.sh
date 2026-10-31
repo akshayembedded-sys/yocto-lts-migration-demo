@@ -1,4 +1,5 @@
 # SPDX-License-Identifier: MIT
+# shellcheck shell=bash
 # Shared settings for build.sh and boot-test.sh. Source it, don't run it.
 
 REPO_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
