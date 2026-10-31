@@ -1,0 +1,61 @@
+# Trimmed evidence for docs/IMX91.md. Full logs (local only): logs/imx91-sync-20261031-153901.log, logs/imx91-build-20261031-201443.log (1.4M)
+## sync: logs/imx91-sync-20261031-153901.log
+LAYER_REV sources/base 84df0b1ff416c6739472f7f7eadff04fa90d38f6
+LAYER_REV sources/meta-arm 1b85bbb4cab9658da3cd926c62038b8559c5c64e
+LAYER_REV sources/meta-browser dc31889c0899971def535dc1c040edf18bc16691
+LAYER_REV sources/meta-clang fe561f41aef0cff9e6f96730ab59f28dca2eb682
+LAYER_REV sources/meta-freescale 0f8091c63dd8805610c09b08409bc58492a3b16f
+LAYER_REV sources/meta-freescale-3rdparty 6c063450d464eb2f380443c7d9af1b94ce9b9d75
+LAYER_REV sources/meta-freescale-distro b9d6a5d9931922558046d230c1f5f4ef6ee72345
+LAYER_REV sources/meta-imx 92ad51ef3cc7f132238f1ae6c8e81432f2a69cc7
+LAYER_REV sources/meta-nxp-connectivity 783becb4b5716d989f50db95b7133d38eae5b47b
+LAYER_REV sources/meta-nxp-demo-experience 8fd7154c05b716e9635279047f65785399432d88
+LAYER_REV sources/meta-openembedded 80e01188fa822d87d301ee71973c462d7a865493
+LAYER_REV sources/meta-qt6 dc13e1bfda4a4757a08c2d6673bc4bac012c4a80
+LAYER_REV sources/meta-security 11ea91192d43d7c2b0b95a93aa63ca7e73e38034
+LAYER_REV sources/meta-timesys 4dc3f4bdfde4a86904b6e1a3d58df4696e7a63fa
+LAYER_REV sources/meta-virtualization 6a80f140e387621f62964209a2e07d3bcfb125ce
+LAYER_REV sources/poky f43f393ef0246b7bee6eed8bcf8271cf2b8cdf40
+LAYER_REV sources/meta-imx-frdm 0391d7457a9f044f2b38ed3f91570926a669261b imx-frdm-4.0
+IMX91_PHASE=sync
+IMX91_EXIT=0
+IMX91_SECONDS=165
+## build: logs/imx91-build-20261031-201443.log
+demo                  /top/meta-demo                                                          10
+imx91-11x11-lpddr4-frdm
+fsl-imx-xwayland
+systemd
+wic.bmap wic.zst tar.zst
+meta-demo            = "<unknown>:<unknown>"
+Initialising tasks...Sstate summary: Wanted 2403 Local 0 Mirrors 0 Missed 2403 Current 0 (0% match, 0% complete)
+NOTE: Tasks Summary: Attempted 5015 tasks of which 6 didn't need to be rerun and all succeeded.
+Summary: There were 33 WARNING messages.
+IMX91_PHASE=build
+IMX91_EXIT=0
+IMX91_SECONDS=4090
+## WARNING lines (33): 32 upstream fetches served from mirrors (not listed), 1 linux-imx QA issue:
+WARNING: linux-imx-6.6.36+git-r0 do_package_qa: QA Issue: File /usr/src/debug/linux-imx/6.6.36+git/lib/oid_registry_data.c in package linux-imx-src contains reference to TMPDIR
+## deploy dir (files listed, none committed)
+3707 demo-image-imx91-11x11-lpddr4-frdm.rootfs-20261031144540.wic.bmap  
+43924056 demo-image-imx91-11x11-lpddr4-frdm.rootfs-20261031144540.wic.zst  
+65 demo-image-imx91-11x11-lpddr4-frdm.rootfs.wic.bmap -> demo-image-imx91-11x11-lpddr4-frdm.rootfs-20261031144540.wic.bmap
+64 demo-image-imx91-11x11-lpddr4-frdm.rootfs.wic.zst -> demo-image-imx91-11x11-lpddr4-frdm.rootfs-20261031144540.wic.zst
+961 demo-image-imx-imx-boot-bootpart.wks  
+15 imx-boot -> imx-boot-tagged
+2013184 imx-boot-imx91-11x11-lpddr4-frdm-sd.bin-flash_singleboot  
+2013224 imx-boot-tagged  
+4096 imx-boot-tools  
+2013184 imx-boot-untagged  
+uncompressed wic bytes: 309748736
+sha256 wic.zst: ade4f9111d046cff282e24a59a9794d1699c7e9c0ba63bb2f862dd06d21af4d1
+## image manifest (selected)
+demod armv8a 1.0+git0+88d409fc96-r0
+packagegroup-core-boot imx91-11x11-lpddr4-frdm 1.0-r0
+systemd armv8a 1:255.4-r0
+## u-boot default device tree
+CONFIG_DEFAULT_FDT_FILE="imx91-11x11-frdm.dtb"
+## disk use (du -sh, 2026-10-31)
+67G	~/yocto-builds/imx91/build-frdm-imx91/tmp
+6.1G	~/yocto-builds/imx91/downloads
+4.3G	~/yocto-builds/imx91/build-frdm-imx91/sstate-cache
+194M	~/yocto-builds/imx91/sources
