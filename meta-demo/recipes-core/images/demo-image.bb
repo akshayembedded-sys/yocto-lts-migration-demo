@@ -4,7 +4,7 @@ LICENSE = "MIT"
 
 IMAGE_INSTALL = "packagegroup-core-boot demod ${CORE_IMAGE_EXTRA_INSTALL}"
 
-# Root login without a password, so the boot test can log in
-EXTRA_IMAGE_FEATURES += "debug-tweaks"
+# Root login for the boot test comes from the core/yocto/root-login-with-empty-password
+# fragment in kas/wrynose.yml, so the product image itself has no empty root password.
 
 inherit core-image
