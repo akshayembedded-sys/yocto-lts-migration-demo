@@ -34,8 +34,9 @@ expected to break in session 4. Evidence: `logs/scarthgap-evidence.txt`.
   ERROR: No recipes in default available for:
   /build/../repo/meta-demo/recipes-kernel/linux/linux-yocto_5.15.bbappend
   ```
-- **Root cause:** the bbappend's file name pins kernel version 5.15. Scarthgap's poky ships only
-  `meta/recipes-kernel/linux/linux-yocto_6.6.bb` (checked in our checkout), so the append matches
+- **Root cause:** the bbappend's file name pins kernel version 5.15. Scarthgap's poky ships only the
+  6.6 linux-yocto recipes (`linux-yocto_6.6.bb` and its -rt/-tiny variants, plus `linux-yocto-dev.bb`;
+  `logs/source-facts-evidence.txt`), so the append matches
   no recipe.
 - **Fix:** rename it to `linux-yocto_%.bbappend`. The config fragment `demo.cfg` only sets generic
   options (`CONFIG_SOFT_WATCHDOG`, `CONFIG_IKCONFIG_PROC`), so it does not depend on the kernel

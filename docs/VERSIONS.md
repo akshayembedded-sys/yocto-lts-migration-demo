@@ -27,7 +27,7 @@ Sources: `git describe --tags` in the poky checkout and `grep SRCREV` on the ker
 |---|---|
 | poky | `scarthgap` @ `4fb7016a07507683359ebd620f1951fd5ea44bfa` (tag `yocto-5.0.21`) |
 | Layers used | `meta`, `meta-poky`, `meta-yocto-bsp` (from poky), `meta-demo` (this repo) |
-| linux-yocto | `6.6.151` (`linux-yocto_6.6.bb`, the only linux-yocto recipe in this poky), SRCREV machine `b96d2d770c`, meta `dd201eb6ec` |
+| linux-yocto | `6.6.151` (`linux-yocto_6.6.bb`, the only versioned linux-yocto recipe in this poky, besides its -rt and -tiny variants), SRCREV machine `b96d2d770c`, meta `dd201eb6ec` |
 | demod SRCREV | `88d409fc9687fd9022ca34c871cb47cc4c21baee` (unchanged) |
 | kas / kas-container | 4.8.2, script sha256 `b6973af0ca87da02defc4637479af4d0c01dc9a3f29b44842c5db99f9f498d2c` |
 | Container image | `ghcr.io/siemens/kas/kas@sha256:fd0000890ccf7c8091239e1df9aa46af7721b6e4d992be0ce3d178d17ffcebff` |
