@@ -7,6 +7,7 @@ BUILD_EXIT=0
 BUILD_SECONDS=9765
 IMAGE_FILE=~/yocto-builds/kirkstone/build/tmp/deploy/images/qemuarm64/demo-image-qemuarm64-20261030173524.rootfs.ext4
 IMAGE_SIZE_BYTES=106166272
+Sstate summary: Wanted 1431 Local 0 Mirrors 0 Missed 1431 Current 0 (0% match, 0% complete)
 NOTE: Tasks Summary: Attempted 4171 tasks of which 0 didn't need to be rerun and all succeeded.
 Summary: There were 63 WARNING messages.
 fetch fell back to Yocto mirrors (upstream URL unreachable): 12
