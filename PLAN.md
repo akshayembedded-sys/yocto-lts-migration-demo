@@ -164,20 +164,20 @@ finds BitBake in the sibling `bitbake` checkout.
 ### The same Wrynose build with bitbake-setup (official tool)
 From the [Wrynose Quick Build](https://docs.yoctoproject.org/wrynose/brief-yoctoprojectqs/index.html#install-and-use-bitbake-setup):
 ```bash
-python3 -m venv --clear ./bitbake-setup-venv && . ./bitbake-setup-venv/bin/activate
-pip install bitbake-setup
+# session 4: the kas image has no python3-venv, so bitbake-setup runs from a bitbake checkout
+git clone -b 2.18 https://git.openembedded.org/bitbake && export PATH="$PWD/bitbake/bin:$PATH"
 bitbake-setup init --non-interactive poky-wrynose poky distro/poky machine/qemuarm64
-source <setup-dir>/build/init-build-env
+source <top-dir>/bitbake-builds/poky-wrynose/build/init-build-env
 bitbake-layers add-layer /path/to/repo/meta-demo
-# our distro instead of the distro/poky fragment; then the CVE fragment
-bitbake-config-build disable-fragment distro/poky   # session 4: confirm this is how to swap the distro
-echo 'DISTRO = "demo"' >> conf/local.conf
+# distro/demo replaces the built-in distro/poky fragment (confirmed in session 4)
+bitbake-config-build enable-fragment distro/demo
 bitbake-config-build enable-fragment core/yocto/sbom-cve-check
+bitbake-config-build enable-fragment core/yocto/root-login-with-empty-password
 bitbake demo-image
 ```
 bitbake-setup exists only for 5.3 and later, so Kirkstone and Scarthgap have no equivalent; their
-kas files are the reference. Session 4 writes `docs/BITBAKE-SETUP.md` from a real run and fixes
-any command above that does not work as written.
+kas files are the reference. The commands above are the ones that worked in session 4; the run and
+every change from the first sketch are in `docs/BITBAKE-SETUP.md`.
 
 ---
 
