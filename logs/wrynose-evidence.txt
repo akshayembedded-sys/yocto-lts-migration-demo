@@ -1,0 +1,92 @@
+# Wrynose 6.0.4 evidence (trimmed from the full logs, which are not committed)
+
+## Build attempts (scripts/build.sh wrynose)
+### 1: logs/wrynose-20261031-113727.log
+Use of deprecated value "excluded" for repo "bitbake", layer ".". Replace with "disabled".
+ERROR: Layer demo is not compatible with the core layer which only supports these series: wrynose (layer is compatible with scarthgap)
+BUILD_EXIT=2
+BUILD_SECONDS=156
+### 2: logs/wrynose-20261031-114029.log
+bb.parse.ParseError: ParseError in configuration INHERITs: Could not inherit file classes/cve-check.bbclass
+BUILD_EXIT=2
+BUILD_SECONDS=2
+### 3: logs/wrynose-20261031-114109.log
+ERROR: ParseError at /build/../work/openembedded-core/meta/classes-recipe/kernel.bbclass:185: Could not inherit file classes/kernel-fitimage.bbclass
+WARNING: Sstate directory is shared between several builds (it is set via SSTATE_DIR to /sstate),
+BUILD_EXIT=2
+BUILD_SECONDS=13
+### 4: logs/wrynose-20261031-114225.log
+WARNING: /build/../repo/meta-demo/recipes-demo/demod/demod_git.bb: /build/../repo/meta-demo/recipes-demo/demod/demod_git.bb:21 has a lack of whitespace around the assignment: 'EXTRA_OEMAKE="PREFIX=${prefix}"'
+demo-image was skipped: 'debug-tweaks' in IMAGE_FEATURES (added via EXTRA_IMAGE_FEATURES) is not a valid image feature. Valid feat
+BUILD_EXIT=2
+BUILD_SECONDS=15
+### 5: logs/wrynose-20261031-114314.log (full build starts, empty sstate)
+Sstate summary: Wanted 2904 Local 0 Mirrors 0 Missed 2904 Current 0 (0% match, 0% complete)
+ERROR: demod-1.0+git-r0 do_unpack: Recipes that set S = "${WORKDIR}/git" or S = "${UNPACKDIR}/git" should remove that assignment, as S set by bitbake.conf in oe-core now works.
+NOTE: Tasks Summary: Attempted 1493 tasks of which 0 didn't need to be rerun and 1 failed.
+BUILD_EXIT=2
+BUILD_SECONDS=834
+### 6: logs/wrynose-20261031-115723.log
+| Package 'libsystemd' not found
+| .../aarch64-poky-linux-ld: /usr/src/debug/demod/1.0+git/demod.c:65:(.text.startup+0x100): undefined reference to `sd_notify'
+NOTE: Tasks Summary: Attempted 5540 tasks of which 1490 didn't need to be rerun and 1 failed.
+BUILD_EXIT=2
+BUILD_SECONDS=3962
+### 7: logs/wrynose-20261031-130409.log
+| install: cannot stat '/build/tmp/work/cortexa57-poky-linux/demod/1.0+git/demod.service': No such file or directory
+BUILD_EXIT=2
+BUILD_SECONDS=97
+### 8: logs/wrynose-20261031-130601.log
+NOTE: Tasks Summary: Attempted 5773 tasks of which 5552 didn't need to be rerun and all succeeded.
+BUILD_EXIT=0
+BUILD_SECONDS=578
+IMAGE_FILE=not found: /home/akshay-p/yocto-builds/wrynose/build/tmp/deploy/images/qemuarm64/demo-image-qemuarm64.rootfs.ext4
+boot test logs/wrynose-boot-20261031-1315.log:
+runqemu - ERROR - .zst images are only supported with snapshot mode. You can either use the "snapshot" option or use an uncompressed image.
+### 9: logs/wrynose-20261031-131741.log
+sbom-cve-check: error: [Errno 2] No such file or directory: '/build/tmp/deploy/images/qemuarm64/demo-image-qemuarm64.rootfs-20261031074746.spdx.json'
+NOTE: Tasks Summary: Attempted 5770 tasks of which 5761 didn't need to be rerun and 1 failed.
+BUILD_EXIT=2
+BUILD_SECONDS=95
+### 10: logs/wrynose-20261031-132129.log (oe-core patch applied)
+Patch applied. (patch path: /repo/patches/openembedded-core/0001-sbom-cve-check-read-the-SBOM-through-IMAGE_LINK_NAME.patch, repo: openembedded-core, patch entry: sbom-link-name)
+BUILD_EXIT=0
+BUILD_SECONDS=198
+### 11: logs/wrynose-20261031-132534.log (final)
+NOTE: Tasks Summary: Attempted 5773 tasks of which 5761 didn't need to be rerun and all succeeded.
+Summary: There were 15 WARNING messages.
+sbom-cve-check "Found unpatched CVEs" warnings: 15
+other warnings: 0
+BUILD_RELEASE=wrynose
+BUILD_EXIT=0
+BUILD_SECONDS=191
+IMAGE_FILE=/home/akshay-p/yocto-builds/wrynose/build/tmp/deploy/images/qemuarm64/demo-image-qemuarm64.rootfs-20261031073605.ext4.zst
+IMAGE_SIZE_BYTES=36321026
+IMAGE_UNCOMPRESSED_BYTES=161427456
+
+## FIT image from linux-yocto-fitimage (dumpimage -l fitImage)
+FIT description: Kernel fitImage for Demo industrial distro/1.0/qemuarm64
+ Image 0 (kernel-1)
+  Type:         Kernel Image
+  Compression:  gzip compressed
+  Architecture: AArch64
+  Load Address: 0x40080000
+  Entry Point:  0x40080000
+ Default Configuration: 'conf-1'
+
+## CVE report (sbom-cve-check)
+34289817 demo-image-qemuarm64.rootfs-20261031075547.sbom-cve-check.yocto.json
+68 demo-image-qemuarm64.rootfs.sbom-cve-check.yocto.json
+
+## Boot test (logs/wrynose-boot-20261031-1329.log, runqemu qemuarm64 nographic slirp snapshot)
+qemuarm64 login: root
+     Active: active (running) since Sat 2026-10-31 07:59:14 UTC; 10s ago
+   Main PID: 195 (demod)
+     Status: "sample 3"
+Oct 31 07:59:14 qemuarm64 demod[195]: demod: sample=1 loadavg="0.88 0.18 ....30"
+active
+CONFIG_SOFT_WATCHDOG=y
+Linux qemuarm64 6.18.52-yocto-standard #1 SMP PREEMPT Wed Sep 23 03:10:06 UTC 2026 aarch64 GNU/Linux
+BOOT_LOGIN_PROMPT=yes
+BOOT_DEMOD_RUNNING=yes
+BOOT_TEST_EXIT=0

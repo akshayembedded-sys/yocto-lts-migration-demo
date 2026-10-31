@@ -35,3 +35,23 @@ Sources: `kas-container dump kas/kirkstone.yml` (poky checkout),
 
 Sources: `git describe --tags` in the poky checkout, `bitbake-getvar --value -r virtual/kernel PV`
 (and `SRCREV_machine`, `SRCREV_meta`), `bitbake-getvar --value DISTRO_FEATURES`.
+
+## Wrynose (Yocto 6.0.4)
+
+| Component | Value |
+|---|---|
+| bitbake | `2.18` @ `51fd94a67fa17650a9ff623492005972bbc7d26f` (tag `yocto-6.0.4`) |
+| openembedded-core | `wrynose` @ `0f03c732a0a2d0506b41b1abe60b3f368b2300dc` (tag `yocto-6.0.4`), plus our patch `patches/openembedded-core/0001-sbom-cve-check-read-the-SBOM-through-IMAGE_LINK_NAME.patch` applied by kas |
+| meta-yocto | `wrynose` @ `7c25b11156553145fa6b241a2d4f65d94438f804` (tag `yocto-6.0.4`) |
+| Layers used | `meta` (openembedded-core), `meta-poky`, `meta-yocto-bsp` (meta-yocto), `meta-demo` (this repo) |
+| linux-yocto | `6.18.52` (`linux-yocto_6.18.bb`), SRCREV machine `364c4b44ab`, meta `2184786cc3`; FIT from `linux-yocto-fitimage.bb` |
+| demod SRCREV | `88d409fc9687fd9022ca34c871cb47cc4c21baee` (unchanged) |
+| Configuration fragments | `core/yocto/sbom-cve-check`, `core/yocto/root-login-with-empty-password` |
+| kas / kas-container | 5.5, script sha256 `7a8186f18d14ec6bec3f8d5188eba7a60f1ef4b5587af15917527588cc7d738a` |
+| Container image | `ghcr.io/siemens/kas/kas@sha256:4b210b0be3c887875973c4f4c35470b4ecf3edd2346c9de1bdd33feae5b86e94` |
+| Container distro | Debian 13.6, Python 3.13.5, on the [Wrynose supported list](https://docs.yoctoproject.org/wrynose/ref-manual/system-requirements.html#supported-linux-distributions) |
+| DISTRO_FEATURES | `systemd usrmerge acl alsa bluetooth debuginfod ext2 ipv4 ipv6 wifi xattr nfs zeroconf pci 3g nfc x11 vfat seccomp pulseaudio gobject-introspection-data ldconfig opengl ptest multiarch wayland vulkan` |
+| Build host | same as Kirkstone |
+
+Sources: `git describe --tags` and `git rev-parse HEAD` in each kas checkout, `bitbake-getvar`
+as for Scarthgap, `/etc/debian_version` and `python3 --version` in the image.
