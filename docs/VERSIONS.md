@@ -17,8 +17,9 @@ container images, kernel SRCREVs) and `logs/verify-evidence.txt` (`DISTRO_FEATUR
 | Container distro | Debian 12.11, which is on the [Kirkstone supported list](https://docs.yoctoproject.org/kirkstone/ref-manual/system-requirements.html#supported-linux-distributions) |
 | Build host | Ubuntu 24.04.5, 32 CPUs, 62 GiB RAM, Docker 29.8.2 |
 
-Sources: `kas-container dump kas/kirkstone.yml` (poky checkout),
-`bitbake -e virtual/kernel | grep ^PV=`, `docker image inspect`, `/etc/debian_version` inside the image.
+Sources: `git describe --tags` in the poky checkout and `grep SRCREV` on the kernel recipe
+(`logs/host-and-tools-evidence.txt`); the kernel version is in the fitImage name and the boot log's
+`uname` line (`logs/kirkstone-evidence.txt`); `docker image inspect` and `/etc/debian_version` in the image.
 
 ## Scarthgap (Yocto 5.0.21)
 
@@ -34,8 +35,9 @@ Sources: `kas-container dump kas/kirkstone.yml` (poky checkout),
 | DISTRO_FEATURES | `acl alsa bluetooth debuginfod ext2 ipv4 ipv6 pcmcia usbgadget usbhost wifi xattr nfs zeroconf pci 3g nfc x11 vfat seccomp opengl ptest multiarch wayland vulkan systemd usrmerge` |
 | Build host | same as Kirkstone |
 
-Sources: `git describe --tags` in the poky checkout, `bitbake-getvar --value -r virtual/kernel PV`
-(and `SRCREV_machine`, `SRCREV_meta`), `bitbake-getvar --value DISTRO_FEATURES`.
+Sources: `git describe --tags` in the poky checkout and `grep SRCREV` on `linux-yocto_6.6.bb`
+(`logs/host-and-tools-evidence.txt`); the kernel version from the boot log's `uname` line;
+`bitbake-getvar --value DISTRO_FEATURES` (`logs/verify-evidence.txt`).
 
 ## Wrynose (Yocto 6.0.4)
 

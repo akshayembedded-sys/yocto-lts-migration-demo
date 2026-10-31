@@ -7,8 +7,8 @@ Products still built on it get no more security fixes from the Yocto Project. Th
 releases are 5.0 Scarthgap (to April 2028) and 6.0 Wrynose (to April 2030). This repo takes a
 small product layer, `meta-demo`, from Kirkstone to Scarthgap to Wrynose, and records what broke at
 each step. The layer has a C daemon with a systemd service, a kernel config fragment, a FIT kernel,
-CVE scanning and an image. Every break is backed by our own build log and a link to the official
-migration guide. `PLAN.md` predicted the breaks before any build ran: 8 of the 10 Wrynose breaks were
+CVE scanning and an image. Every break is backed by our own build log and a link to its source: the official migration
+guide, or for the two the guides do not cover, the release notes or the upstream commit. `PLAN.md` predicted the breaks before any build ran: 8 of the 10 Wrynose breaks were
 predicted, and all 4 Scarthgap breaks.
 
 ## Hardware and exact versions
@@ -35,8 +35,8 @@ Wrynose layer. The other releases build from their tags.
 | Kirkstone | `git checkout kirkstone-baseline && scripts/build.sh kirkstone && scripts/boot-test.sh kirkstone` |
 | Scarthgap | `git checkout scarthgap-migrated && scripts/build.sh scarthgap && scripts/boot-test.sh scarthgap` |
 | Wrynose (kas) | `git checkout main && scripts/build.sh wrynose && scripts/boot-test.sh wrynose` |
-| Wrynose (bitbake-setup) | `scripts/bitbake-setup-build.sh` ([docs/BITBAKE-SETUP.md](docs/BITBAKE-SETUP.md)) |
-| FRDM-IMX91 | `scripts/imx91-build.sh sync && EULA=1 scripts/imx91-build.sh build`. Read and accept NXP's licence first (see below) |
+| Wrynose (bitbake-setup) | `git checkout main && scripts/bitbake-setup-build.sh` ([docs/BITBAKE-SETUP.md](docs/BITBAKE-SETUP.md)) |
+| FRDM-IMX91 | `git checkout main && scripts/imx91-build.sh sync && EULA=1 scripts/imx91-build.sh build`. Read and accept NXP's licence first (see below) |
 
 `build.sh` prints `BUILD_EXIT` and the image size. `boot-test.sh` boots the image in `runqemu`, logs in,
 checks that `demod` is `active (running)` and prints `BOOT_TEST_EXIT`. The serial console goes to `logs/`.
