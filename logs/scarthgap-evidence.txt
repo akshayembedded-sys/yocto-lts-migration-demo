@@ -10,8 +10,11 @@ ERROR: No recipes in default available for:
 /build/../repo/meta-demo/recipes-kernel/linux/linux-yocto_5.15.bbappend
 BUILD_EXIT=2
 BUILD_SECONDS=26
-### attempt 3: log overwritten by attempt 4 (see MIGRATION_LOG.md S3); error copied from its output
+### attempt 3: log overwritten by attempt 4 (see MIGRATION_LOG.md S3); lines copied from its terminal output at 10:10:30
+ERROR: Nothing PROVIDES 'systemd' (but /build/../repo/meta-demo/recipes-demo/demod/demod_git.bb DEPENDS on or otherwise requires it)
 systemd was skipped: missing required distro feature 'usrmerge' (not in DISTRO_FEATURES)
+ERROR: Required build target 'demo-image' has no buildable providers.
+Missing or unbuildable dependency chain was: ['demo-image', 'demod', 'systemd']
 BUILD_EXIT=2
 ### attempt 4: logs/scarthgap-20261031-1010.log (full build, empty sstate)
 Sstate summary: Wanted 2423 Local 0 Mirrors 0 Missed 2423 Current 0 (0% match, 0% complete)
@@ -20,14 +23,14 @@ Summary: There were 29 WARNING messages.
 BUILD_RELEASE=scarthgap
 BUILD_EXIT=0
 BUILD_SECONDS=3446
-IMAGE_FILE=not found: /home/akshay-p/yocto-builds/scarthgap/build/tmp/deploy/images/qemuarm64/demo-image-qemuarm64.ext4
+IMAGE_FILE=not found: ~/yocto-builds/scarthgap/build/tmp/deploy/images/qemuarm64/demo-image-qemuarm64.ext4
 warnings: 23 cve-check unpatched CVE, 6 upstream fetch fell back to mirror, 0 other
 ### attempt 5: logs/scarthgap-20261031-110911.log (fixed build.sh, from sstate)
 NOTE: Tasks Summary: Attempted 5735 tasks of which 5087 didn't need to be rerun and all succeeded.
 BUILD_RELEASE=scarthgap
 BUILD_EXIT=0
 BUILD_SECONDS=89
-IMAGE_FILE=/home/akshay-p/yocto-builds/scarthgap/build/tmp/deploy/images/qemuarm64/demo-image-qemuarm64.rootfs-20261031053913.ext4
+IMAGE_FILE=~/yocto-builds/scarthgap/build/tmp/deploy/images/qemuarm64/demo-image-qemuarm64.rootfs-20261031053913.ext4
 IMAGE_SIZE_BYTES=139569152
 
 ## Deploy dir
@@ -59,6 +62,7 @@ Oct 31 05:40:58 qemuarm64 demod[199]: demod: sample=1 loadavg="0.56 0.12 ....84"
 active
 CONFIG_SOFT_WATCHDOG=y
 Linux qemuarm64 6.6.151-yocto-standard #1 SMP PREEMPT Tue Aug 18 18:50:33 UTC 2026 aarch64 GNU/Linux
+# the BOOT_* lines below are boot-test.sh stdout from the session terminal; until session 6 the script did not write them into the console log
 BOOT_LOGIN_PROMPT=yes
 BOOT_DEMOD_RUNNING=yes
 BOOT_TEST_EXIT=0
