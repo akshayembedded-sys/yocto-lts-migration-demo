@@ -45,3 +45,6 @@ demod/*.o
 
 # Python bytecode
 __pycache__/
+
+# boot-test.sh scratch output, removed when the test finishes
+logs/*.log.out
