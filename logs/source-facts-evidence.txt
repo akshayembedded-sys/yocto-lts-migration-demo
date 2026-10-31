@@ -1,55 +1,122 @@
-# Source-code facts cited in docs/, as grep output from our own checkouts (paths relative to each checkout).
-# Wrynose oe-core = kas work dir at yocto-6.0.4 (+W10 patch), bitbake = 51fd94a6 (yocto-6.0.4); recorded 2026-10-31
-## Wrynose oe-core
-221:do_compile[depends] += "virtual/kernel:do_deploy"
-150:KERNEL_DEPLOY_DEPEND ?= "virtual/kernel:do_deploy"
-151:do_build[depends] += "${KERNEL_DEPLOY_DEPEND}"
-1052:                    bb.warn("""Sstate directory is shared between several builds (it is set via SSTATE_DIR to {}),
-1446:        bb.fatal('Recipes that set S = "${WORKDIR}/git" or S = "${UNPACKDIR}/git" should remove that assignment, as S set by bitbake.conf in oe-core now works.')
-12:IMAGE_VERSION_SUFFIX ?= "-${DATETIME}"
-13:IMAGE_VERSION_SUFFIX[vardepsexclude] += "DATETIME SOURCE_DATE_EPOCH"
-37:    if bb.data.inherits_class('deploy', d) and d.getVar("IMAGE_VERSION_SUFFIX") == "-${DATETIME}":
-13:python do_sbom_cve_check() {
-23:    sbom_path = os.path.join(d.getVar("DEPLOY_DIR_IMAGE"), (link_name or image_name) + ".spdx.json")
-24:    run_sbom_cve_check(d, sbom_path, image_name, link_name)
-27:addtask do_sbom_cve_check after do_create_image_sbom_spdx before do_build
-(sbom-cve-check.bbclass above is the patched kas copy; unpatched yocto-6.0.4 line 17:)
+# Source-code facts cited in docs/, recorded 2026-10-31 from our own checkouts. Each block shows the
+# command and its output; file paths are relative to the checkout named in the section heading.
+
+## Wrynose openembedded-core (kas work dir; yocto-6.0.4 + the W10 patch, HEAD d3e7f2094e)
+$ grep -Hn 'virtual/kernel:do_deploy' meta/classes-recipe/kernel-fit-image.bbclass
+meta/classes-recipe/kernel-fit-image.bbclass:221:do_compile[depends] += "virtual/kernel:do_deploy"
+$ grep -Hn 'KERNEL_DEPLOY_DEPEND' meta/classes-recipe/image.bbclass
+meta/classes-recipe/image.bbclass:150:KERNEL_DEPLOY_DEPEND ?= "virtual/kernel:do_deploy"
+meta/classes-recipe/image.bbclass:151:do_build[depends] += "${KERNEL_DEPLOY_DEPEND}"
+$ grep -Hn 'Sstate directory is shared' meta/classes-global/sanity.bbclass
+meta/classes-global/sanity.bbclass:1052:                    bb.warn("""Sstate directory is shared between several builds (it is set via SSTATE_DIR to {}),
+$ grep -Hn 'should remove that assignment' meta/classes-global/insane.bbclass | cut -c1-140
+meta/classes-global/insane.bbclass:1446:        bb.fatal('Recipes that set S = "${WORKDIR}/git" or S = "${UNPACKDIR}/git" should remove that
+$ grep -Hn 'DATETIME' meta/classes-recipe/image-artifact-names.bbclass | head -2
+meta/classes-recipe/image-artifact-names.bbclass:12:IMAGE_VERSION_SUFFIX ?= "-${DATETIME}"
+meta/classes-recipe/image-artifact-names.bbclass:13:IMAGE_VERSION_SUFFIX[vardepsexclude] += "DATETIME SOURCE_DATE_EPOCH"
+$ git show 0f03c732a0a2d0506b41b1abe60b3f368b2300dc:meta/classes-recipe/sbom-cve-check.bbclass | sed -n 17p   # unpatched yocto-6.0.4
     sbom_path = d.expand("${DEPLOY_DIR_IMAGE}/${IMAGE_NAME}.spdx.json")
-738:#     into your local.conf
-816:include conf/toolcfg.conf
-817:include conf/local.conf
-822:addfragments ${OE_FRAGMENTS_PREFIX} OE_FRAGMENTS OE_FRAGMENTS_METADATA_VARS OE_FRAGMENTS_BUILTIN
-828:include conf/distro/${DISTRO}.conf
-417:UNPACKDIR ??= "${WORKDIR}/sources"
-418:BB_GIT_DEFAULT_DESTSUFFIX = "${BP}"
-421:S = "${UNPACKDIR}/${BP}"
-## Wrynose bitbake (lib/bb/fetch2/git.py)
-666:        def_destsuffix = (d.getVar("BB_GIT_DEFAULT_DESTSUFFIX") or "git") + "/"
-670:            def_destsuffix = "%s/" % os.path.basename(subpath.rstrip('/'))
-680:            def_destsuffix = ""
-682:        destsuffix = ud.parm.get("destsuffix", def_destsuffix)
-## Scarthgap poky 4fb7016a
+$ grep -Hn 'sbom_path' meta/classes-recipe/sbom-cve-check.bbclass   # patched copy
+meta/classes-recipe/sbom-cve-check.bbclass:23:    sbom_path = os.path.join(d.getVar("DEPLOY_DIR_IMAGE"), (link_name or image_name) + ".spdx.json")
+meta/classes-recipe/sbom-cve-check.bbclass:24:    run_sbom_cve_check(d, sbom_path, image_name, link_name)
+$ grep -HnE '^include conf/(toolcfg|local).conf|^addfragments|^include conf/distro/' meta/conf/bitbake.conf
+meta/conf/bitbake.conf:816:include conf/toolcfg.conf
+meta/conf/bitbake.conf:817:include conf/local.conf
+meta/conf/bitbake.conf:822:addfragments ${OE_FRAGMENTS_PREFIX} OE_FRAGMENTS OE_FRAGMENTS_METADATA_VARS OE_FRAGMENTS_BUILTIN
+meta/conf/bitbake.conf:828:include conf/distro/${DISTRO}.conf
+meta/conf/bitbake.conf:829:include conf/distro/defaultsetup.conf
+$ grep -HnE '^UNPACKDIR|^BB_GIT_DEFAULT_DESTSUFFIX|^S = |^SRCPV' meta/conf/bitbake.conf
+meta/conf/bitbake.conf:417:UNPACKDIR ??= "${WORKDIR}/sources"
+meta/conf/bitbake.conf:418:BB_GIT_DEFAULT_DESTSUFFIX = "${BP}"
+meta/conf/bitbake.conf:421:S = "${UNPACKDIR}/${BP}"
+meta/conf/bitbake.conf:743:SRCPV = ""
+$ grep -HnE '^KERNEL_CLASSES|inherit_defer|inherit \$\{KERNEL_CLASSES\}' meta/classes-recipe/kernel.bbclass | head -3
+meta/classes-recipe/kernel.bbclass:184:KERNEL_CLASSES ?= " kernel-uimage "
+meta/classes-recipe/kernel.bbclass:185:inherit_defer ${KERNEL_CLASSES}
+$ grep -Hn 'inherit' meta/recipes-kernel/linux/linux-yocto-fitimage.bb
+meta/recipes-kernel/linux/linux-yocto-fitimage.bb:9:inherit linux-kernel-base kernel-fit-image
+$ grep -HnE 'export PKG_CONFIG_(LIBDIR|SYSROOT_DIR)' meta/classes-recipe/pkgconfig.bbclass
+meta/classes-recipe/pkgconfig.bbclass:10:export PKG_CONFIG_LIBDIR ?= "${STAGING_LIBDIR}/pkgconfig:${STAGING_DATADIR}/pkgconfig"
+meta/classes-recipe/pkgconfig.bbclass:12:export PKG_CONFIG_SYSROOT_DIR ?= "${STAGING_DIR_HOST}"
+$ grep -Hn 'PROVIDES' meta/recipes-devtools/pkgconf/pkgconf_*.bb
+meta/recipes-devtools/pkgconf/pkgconf_2.5.1.bb:9:PROVIDES += "pkgconfig"
+meta/recipes-devtools/pkgconf/pkgconf_2.5.1.bb:10:RPROVIDES:${PN} += "pkgconfig"
+meta/recipes-devtools/pkgconf/pkgconf_2.5.1.bb:64:RPROVIDES:${PN} += "pkgconfig(pkg-config)"
+$ grep -Hn 'KERNEL_IMAGETYPE' meta/conf/machine/qemuarm64.conf
+meta/conf/machine/qemuarm64.conf:8:KERNEL_IMAGETYPE = "Image"
+$ grep -HnE '^QB_DEFAULT_(KERNEL|FSTYPE)' meta/classes-recipe/qemuboot.bbclass
+meta/classes-recipe/qemuboot.bbclass:99:QB_DEFAULT_KERNEL ?= "${@bb.utils.contains("INITRAMFS_IMAGE_BUNDLE", "1", "${KERNEL_IMAGETYPE}-${INITRAMFS_LINK_NAME}.bin", "${KERNEL_IMAGETYPE}", d)}"
+meta/classes-recipe/qemuboot.bbclass:100:QB_DEFAULT_FSTYPE ?= "ext4.zst"
+$ grep -Hn . meta/conf/fragments/yocto/sbom-cve-check.conf | grep -vE ':[0-9]+:#|BB_CONF_FRAGMENT'
+meta/conf/fragments/yocto/sbom-cve-check.conf:3: - Adds the sbom-cve-check class to IMAGE_CLASSES. \
+meta/conf/fragments/yocto/sbom-cve-check.conf:4: - Configures CVE database recipes to fetch the latest git revision using AUTOREV. \
+meta/conf/fragments/yocto/sbom-cve-check.conf:5: - Ensures generated SBOM includes all CVE annotations. \
+meta/conf/fragments/yocto/sbom-cve-check.conf:6: - Configures the Linux kernel recipe to provide compiled sources, \
+meta/conf/fragments/yocto/sbom-cve-check.conf:7:   allowing CVEs to be excluded if the source is not compiled. \
+meta/conf/fragments/yocto/sbom-cve-check.conf:8:"
+meta/conf/fragments/yocto/sbom-cve-check.conf:10:INHERIT += "create-spdx"
+meta/conf/fragments/yocto/sbom-cve-check.conf:12:IMAGE_CLASSES:append = " sbom-cve-check"
+meta/conf/fragments/yocto/sbom-cve-check.conf:14:SRCREV:pn-sbom-cve-check-update-nvd-native = "${AUTOREV}"
+meta/conf/fragments/yocto/sbom-cve-check.conf:15:SRCREV:pn-sbom-cve-check-update-cvelist-native = "${AUTOREV}"
+meta/conf/fragments/yocto/sbom-cve-check.conf:17:SPDX_INCLUDE_VEX = "all"
+meta/conf/fragments/yocto/sbom-cve-check.conf:18:SPDX_INCLUDE_COMPILED_SOURCES:pn-linux-yocto = "1"
+
+## Wrynose bitbake (kas work dir, yocto-6.0.4)
+$ grep -Hn 'def_destsuffix' lib/bb/fetch2/git.py
+lib/bb/fetch2/git.py:666:        def_destsuffix = (d.getVar("BB_GIT_DEFAULT_DESTSUFFIX") or "git") + "/"
+lib/bb/fetch2/git.py:670:            def_destsuffix = "%s/" % os.path.basename(subpath.rstrip('/'))
+lib/bb/fetch2/git.py:680:            def_destsuffix = ""
+lib/bb/fetch2/git.py:682:        destsuffix = ud.parm.get("destsuffix", def_destsuffix)
+
+## Scarthgap poky (yocto-5.0.21)
+$ ls meta/recipes-kernel/linux/ | grep -E '^linux-yocto'
 linux-yocto_6.6.bb
-## bitbake-setup oe-core ae5a301
+linux-yocto-dev.bb
+linux-yocto.inc
+linux-yocto-rt_6.6.bb
+linux-yocto-tiny_6.6.bb
+
+## bitbake-setup openembedded-core (rev ae5a301091 per config/sources-fixed-revisions.json)
+$ sed -n 17p meta/classes-recipe/sbom-cve-check.bbclass
     sbom_path = d.expand("${DEPLOY_DIR_IMAGE}/${IMAGE_NAME}.spdx.json")
-## NXP sources (repo sync of imx-6.6.36-2.1.0 + meta-imx-frdm imx-frdm-4.0)
+
+## NXP sources (repo sync of imx-6.6.36-2.1.0, plus meta-imx-frdm at imx-frdm-4.0)
+$ ls meta-imx/meta-imx-bsp/conf/machine | grep imx91
 imx91-11x11-lpddr4-evk.conf
 imx91-9x9-lpddr4-qsb.conf
 imx91evk.conf
+$ ls meta-imx-frdm/meta-imx-bsp/conf/machine | grep imx91
 imx91-11x11-lpddr4-frdm.conf
 imx91-11x11-lpddr4-frdm-imx91s.conf
 imx91frdm.conf
 imx91frdmimx91s.conf
-10:# For most users, the dedicated machine imx91-11x11-lpddr4-frdm.conf should be used for simplicity.
-39:POKY_INIT_MANAGER = "systemd"
-## FRDM-IMX91 deploy dir (names only)
+$ ls meta-imx-frdm/meta-nxp-connectivity/conf/machine | grep imx91   # Matter variants, not used
+imx91frdmimx91s-iwxxx-matter.conf
+imx91frdm-iwxxx-matter.conf
+$ grep -HnE 'For most users|^require' meta-imx-frdm/meta-imx-bsp/conf/machine/imx91frdm.conf
+meta-imx-frdm/meta-imx-bsp/conf/machine/imx91frdm.conf:10:# For most users, the dedicated machine imx91-11x11-lpddr4-frdm.conf should be used for simplicity.
+meta-imx-frdm/meta-imx-bsp/conf/machine/imx91frdm.conf:13:require conf/machine/imx91-11x11-lpddr4-frdm.conf
+$ grep -HnE '^(KERNEL_DEVICETREE_BASENAME|UBOOT_CONFIG_BASENAME)' meta-imx-frdm/meta-imx-bsp/conf/machine/imx91-11x11-lpddr4-frdm.conf
+meta-imx-frdm/meta-imx-bsp/conf/machine/imx91-11x11-lpddr4-frdm.conf:11:KERNEL_DEVICETREE_BASENAME = "imx91-11x11-frdm"
+meta-imx-frdm/meta-imx-bsp/conf/machine/imx91-11x11-lpddr4-frdm.conf:22:UBOOT_CONFIG_BASENAME = "imx91_11x11_frdm"
+$ grep -Hn 'include' meta-imx/meta-imx-sdk/conf/distro/fsl-imx-xwayland.conf
+meta-imx/meta-imx-sdk/conf/distro/fsl-imx-xwayland.conf:3:include conf/distro/include/fsl-imx-base.inc
+meta-imx/meta-imx-sdk/conf/distro/fsl-imx-xwayland.conf:4:include conf/distro/include/fsl-imx-preferred-env.inc
+$ grep -Hn 'POKY_INIT_MANAGER' meta-imx/meta-imx-sdk/conf/distro/include/fsl-imx-preferred-env.inc
+meta-imx/meta-imx-sdk/conf/distro/include/fsl-imx-preferred-env.inc:39:POKY_INIT_MANAGER = "systemd"
+
+## FRDM-IMX91 deploy dir
+$ ls | grep -E '^imx91-11x11-frdm\.dtb$'
 imx91-11x11-frdm.dtb
-$ cat demo-image-imx-imx-boot-bootpart.wks (non-comment lines)
+$ grep -v '^#' demo-image-imx-imx-boot-bootpart.wks | grep -v '^$'
 part u-boot --source rawcopy --sourceparams="file=imx-boot" --ondisk mmcblk --no-table --align 32
 part /boot --source bootimg-partition --ondisk mmcblk --fstype=vfat --label boot --active --align 8192 --size 64
 part / --source rootfs --ondisk mmcblk --fstype=ext4 --label root --align 8192
 bootloader --ptable msdos
-## kas 5.5 image entrypoint: docker run --rm --entrypoint cat ghcr.io/siemens/kas/kas:5.5 /container-entrypoint | grep -n ...
+
+## kas 5.5 image entrypoint
+$ docker run --rm --entrypoint cat ghcr.io/siemens/kas/kas:5.5 /container-entrypoint | grep -nE 'build\|checkout\|clean|does not support|if \[ -n "\$USER_ID" \]; then$|exec \$GOSU "\$@"'
+183:	# Docker rootless does not support keeping the user namespace
 203:	build|checkout|clean*|diff|dump|for-all-repos|lock|menu|purge|shell|-*)
 216:		if [ -n "$USER_ID" ]; then
 217:			echo "kas-container: this container does not support \"kas $1\"" >&2
