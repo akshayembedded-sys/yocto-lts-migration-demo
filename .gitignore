@@ -30,6 +30,16 @@ imx-boot*
 *.cve
 *.spdx.json
 *.sbom-cve-check.yocto.json
+modules-*.tgz
+bl31-*
+u-boot*
+*.qemuboot.conf
+*.testdata.json
+*.rootfs.json
+*.env
+*.its
+*.wks
+optee/
 
 # Full logs stay local; only trimmed evidence (*-evidence.txt) is committed
 logs/*.log
