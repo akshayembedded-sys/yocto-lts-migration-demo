@@ -21,7 +21,7 @@ WARNING: /build/../repo/meta-demo/recipes-demo/demod/demod_git.bb: /build/../rep
 demo-image was skipped: 'debug-tweaks' in IMAGE_FEATURES (added via EXTRA_IMAGE_FEATURES) is not a valid image feature. Valid feat
 BUILD_EXIT=2
 BUILD_SECONDS=15
-### 5: logs/wrynose-20261031-114314.log (full build starts, empty sstate)
+### 5: logs/wrynose-20261031-114314.log (full build starts, no sstate reuse: Local 0)
 Sstate summary: Wanted 2904 Local 0 Mirrors 0 Missed 2904 Current 0 (0% match, 0% complete)
 ERROR: demod-1.0+git-r0 do_unpack: Recipes that set S = "${WORKDIR}/git" or S = "${UNPACKDIR}/git" should remove that assignment, as S set by bitbake.conf in oe-core now works.
 NOTE: Tasks Summary: Attempted 1493 tasks of which 0 didn't need to be rerun and 1 failed.

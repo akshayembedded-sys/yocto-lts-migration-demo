@@ -16,7 +16,7 @@ systemd was skipped: missing required distro feature 'usrmerge' (not in DISTRO_F
 ERROR: Required build target 'demo-image' has no buildable providers.
 Missing or unbuildable dependency chain was: ['demo-image', 'demod', 'systemd']
 BUILD_EXIT=2
-### attempt 4: logs/scarthgap-20261031-1010.log (full build, empty sstate)
+### attempt 4: logs/scarthgap-20261031-1010.log (full build, no sstate reuse: Local 0)
 Sstate summary: Wanted 2423 Local 0 Mirrors 0 Missed 2423 Current 0 (0% match, 0% complete)
 NOTE: Tasks Summary: Attempted 5735 tasks of which 0 didn't need to be rerun and all succeeded.
 Summary: There were 29 WARNING messages.

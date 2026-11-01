@@ -219,7 +219,7 @@ Evidence: `logs/wrynose-evidence.txt`.
 
 ### W6. `S = "${WORKDIR}/git"` is fatal
 
-- **Log:** `logs/wrynose-20261031-114314.log` (attempt 5: the full build started, with empty sstate,
+- **Log:** `logs/wrynose-20261031-114314.log` (attempt 5: the full build started, with no sstate reuse,
   and stopped after 834 s: `Attempted 1493 tasks of which 0 didn't need to be rerun and 1 failed`)
 - **Error:**
   ```

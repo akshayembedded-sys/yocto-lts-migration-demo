@@ -1,12 +1,14 @@
 # Measured results
 
 All numbers come from our own logs. The trimmed evidence for each release is in `logs/<release>-evidence.txt`.
-Host: Ubuntu 24.04.5, 32 CPUs, 62 GiB RAM. Each first build starts from an empty SSTATE_DIR (see the `Sstate summary` lines in the evidence files).
+Host: Ubuntu 24.04.5, 32 CPUs, 62 GiB RAM. The first build of each release reused nothing from sstate (`Sstate summary: ... Local 0`, 0% match,
+in the evidence files). The SSTATE_DIR is shared, so for Scarthgap and Wrynose it already held the
+earlier releases' objects; none of them matched.
 
 | Release | Build time (from scratch) | Tasks | `demo-image` ext4 size | Warnings | Breaks fixed | Boot test |
 |---|---|---|---|---|---|---|
 | Kirkstone 4.0.35 (baseline) | 9765 s (2 h 43 min) | 4171 | 106,166,272 bytes (101.2 MiB) | 63: 51 cve-check unpatched CVEs, 12 upstream fetches served from mirrors, 0 from meta-demo | 0 (baseline) | pass: login prompt, `demod` active (running) |
-| Scarthgap 5.0.21 | 3446 s (57 min), empty sstate; DL_DIR shared with Kirkstone (see note) | 5735 | 139,569,152 bytes (133.1 MiB) | 29: 23 cve-check unpatched CVEs, 6 upstream fetches served from mirrors, 0 from meta-demo | 4 (S1–S4 in MIGRATION_LOG.md) | pass: login prompt, `demod` active (running), kernel 6.6.151 |
+| Scarthgap 5.0.21 | 3446 s (57 min), no sstate reuse; DL_DIR shared with Kirkstone (see note) | 5735 | 139,569,152 bytes (133.1 MiB) | 29: 23 cve-check unpatched CVEs, 6 upstream fetches served from mirrors, 0 from meta-demo | 4 (S1–S4 in MIGRATION_LOG.md) | pass: login prompt, `demod` active (running), kernel 6.6.151 |
 | Wrynose 6.0.4 | about 5471 s (1 h 31 min) summed over attempts 5–8, not one clean run (see note); DL_DIR shared | 5773 | `ext4.zst` 36,321,026 bytes; uncompressed 161,427,456 bytes (153.9 MiB) | 15: all sbom-cve-check unpatched CVEs, 0 from meta-demo (final run) | 10 (W1–W10 in MIGRATION_LOG.md; 8 predicted, 2 not) | pass: login prompt, `demod` active (running), kernel 6.18.52 |
 
 The 51 cve-check warnings are the Kirkstone `cve-check` class reporting unpatched CVEs in the
@@ -59,13 +61,13 @@ in docs/VERSIONS.md and the comparison above were read in these runs.
 
 ## Disk use
 
-Measured with `du -sh` on 2026-10-31, after session 6 (`logs/host-and-tools-evidence.txt`):
+Measured with `du -sh` on 2026-11-01, after all session 6 builds (`logs/host-and-tools-evidence.txt`):
 
 | Path | Size |
 |---|---|
 | `~/yocto-cache/downloads` (DL_DIR, shared) | 21 G |
 | `~/yocto-cache/sstate` (SSTATE_DIR, shared) | 17 G |
-| Kirkstone `build/tmp` | 7.2 G |
+| Kirkstone `build/tmp` | 7.3 G |
 | Scarthgap `build/tmp` | 13 G |
 | Wrynose `build/tmp` | 26 G |
 | kas work dirs (layer clones), all three | 0.9 G |
@@ -74,4 +76,6 @@ Measured with `du -sh` on 2026-10-31, after session 6 (`logs/host-and-tools-evid
 | **Total** (`~/yocto-cache` 38 G + `~/yocto-builds` 149 G) | **about 187 G** |
 
 The three QEMU builds plus the shared caches come to about 85 G. PLAN.md estimated 115–180 G for those.
-The FRDM-IMX91 build is large because it ran without `rm_work` (docs/IMX91.md).
+The FRDM-IMX91 build ran without `rm_work`, which deletes each recipe's work dir after it builds
+([rm_work class](https://docs.yoctoproject.org/ref-manual/classes.html#rm-work)); its `tmp/work` alone is
+64 G (docs/IMX91.md).

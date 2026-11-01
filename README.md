@@ -70,10 +70,10 @@ sstate, to prove that the committed content builds (`logs/verify-evidence.txt`).
 
 | Release | Build time | Tasks | Image size | Breaks | Boot test |
 |---|---|---|---|---|---|
-| Kirkstone 4.0.35 | 9765 s, empty sstate | 4171 | 106,166,272 B ext4 | 0 (baseline) | pass |
-| Scarthgap 5.0.21 | 3446 s, empty sstate, downloads shared | 5735 | 139,569,152 B ext4 | 4 | pass, kernel 6.6.151 |
+| Kirkstone 4.0.35 | 9765 s, no sstate reuse | 4171 | 106,166,272 B ext4 | 0 (baseline) | pass |
+| Scarthgap 5.0.21 | 3446 s, no sstate reuse, downloads shared | 5735 | 139,569,152 B ext4 | 4 | pass, kernel 6.6.151 |
 | Wrynose 6.0.4 | about 5471 s, summed over attempts | 5773 | 161,427,456 B ext4 (about 36.3 MB `.ext4.zst`; varies by a few hundred bytes per build) | 10 | pass, kernel 6.18.52 |
-| FRDM-IMX91 (Scarthgap BSP) | 4090 s, empty sstate | 5015 | 309,748,736 B wic (43,924,056 B `.wic.zst`) | n/a | board boot pending |
+| FRDM-IMX91 (Scarthgap BSP) | 4090 s, no sstate reuse | 5015 | 309,748,736 B wic (43,924,056 B `.wic.zst`) | n/a | board boot pending |
 
 ## Known limits
 
