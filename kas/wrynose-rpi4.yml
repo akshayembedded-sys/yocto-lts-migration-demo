@@ -1,0 +1,20 @@
+# SPDX-License-Identifier: MIT
+# Overlay on kas/wrynose.yml: the same demo-image for a Raspberry Pi 4 (64-bit) instead of QEMU.
+# Use both files together: kas build kas/wrynose.yml:kas/wrynose-rpi4.yml (docs/RPI4-WRYNOSE.md)
+header:
+  version: 14
+
+machine: raspberrypi4-64
+
+repos:
+  meta-raspberrypi:
+    url: https://git.yoctoproject.org/meta-raspberrypi
+    branch: wrynose
+    commit: 919588393f41b48cb6c5d832aa35e58a19b6762d
+    layers:
+      .:
+
+local_conf_header:
+  rpi-serial: |
+    # enable_uart=1 in config.txt, for the serial console on GPIO 14/15 (meta-raspberrypi docs/extra-build-config.md)
+    ENABLE_UART = "1"
