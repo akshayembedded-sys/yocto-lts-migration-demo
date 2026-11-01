@@ -46,7 +46,7 @@ Enabled fragments:
 core/yocto/root-login-with-empty-password	Log in as root without password on serial console and over ssh (use with caution).
 core/yocto/sbom-cve-check	This fragment enables sbom-cve-check with recommended default options
 (the 'Unused fragments:' list that follows, six core/yocto-autobuilder and sstate-mirror entries, is not shown)
-+ cat conf/toolcfg.conf ../../site.conf   (matching lines only)
++ cat conf/toolcfg.conf ../../site.conf   (shown: its lines matching grep -E 'OE_FRAGMENTS|DL_DIR')
 OE_FRAGMENTS += "machine/qemuarm64 distro/demo core/yocto/sbom-cve-check core/yocto/root-login-with-empty-password"
 DL_DIR ?= "/downloads"
 + bitbake-getvar --value DISTRO

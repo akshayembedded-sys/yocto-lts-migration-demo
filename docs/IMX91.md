@@ -4,8 +4,9 @@ This page records how `demo-image` was built for NXP's FRDM-IMX91 board with NXP
 6.6.36-2.1.0 (Yocto 5.0 Scarthgap). The setup follows the
 [meta-imx-frdm README](https://github.com/nxp-imx-support/meta-imx-frdm/tree/lf-6.6.36-2.1.0) and NXP's
 [Getting Started with FRDM-IMX91](https://www.nxp.com/document/guide/getting-started-with-frdm-imx91:GS-FRDM-IMX91).
-Script: `scripts/imx91-build.sh`. Trimmed evidence: `logs/imx91-evidence.txt`; machine lists, the quoted machine comment, `POKY_INIT_MANAGER`,
-the device tree file and the `.wks` layout are in `logs/source-facts-evidence.txt`.
+Script: `scripts/imx91-build.sh`. Trimmed evidence: `logs/imx91-evidence.txt`. Machine lists, the quoted machine comment, `DDR_FIRMWARE_NAME`,
+`POKY_INIT_MANAGER`, `IMAGE_BOOT_FILES`, the meta-imx-frdm branch and tag, the device tree file and the
+`.wks` layout are in `logs/source-facts-evidence.txt`; disk use is in `logs/host-and-tools-evidence.txt`.
 
 Nothing from NXP is in this repo: no firmware, no images, no EULA flag. The NXP BSP is covered by
 NXP's licence (`sources/meta-imx/LICENSE.txt` after the sync). The build step accepts it, so read it

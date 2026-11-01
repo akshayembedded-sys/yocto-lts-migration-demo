@@ -6,7 +6,8 @@ The main Wrynose build uses kas (`kas/wrynose.yml`). This page records one build
 [Wrynose Quick Build](https://docs.yoctoproject.org/wrynose/brief-yoctoprojectqs/index.html#install-and-use-bitbake-setup)).
 Everything here comes from one run on 2026-10-31: `scripts/bitbake-setup-build.sh`, full log
 `logs/bitbake-setup-20261031-133501.log` (local only), trimmed evidence in `logs/bitbake-setup-evidence.txt`.
-The oe-core line check and the kas entrypoint lines are in `logs/source-facts-evidence.txt`.
+The oe-core line check, the default-registry `"rev"` lines and the kas entrypoint lines are in
+`logs/source-facts-evidence.txt`.
 
 Result: `BITBAKE_SETUP_EXIT=0`, `NOTE: Tasks Summary: Attempted 5773 tasks of which 1151 didn't need to be rerun and all succeeded.`
 

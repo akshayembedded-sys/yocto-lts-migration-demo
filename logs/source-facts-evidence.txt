@@ -80,7 +80,7 @@ linux-yocto-tiny_6.6.bb
 $ sed -n 17p meta/classes-recipe/sbom-cve-check.bbclass
     sbom_path = d.expand("${DEPLOY_DIR_IMAGE}/${IMAGE_NAME}.spdx.json")
 
-## NXP sources (repo sync of imx-6.6.36-2.1.0, plus meta-imx-frdm at imx-frdm-4.0)
+## NXP sources (repo sync of imx-6.6.36-2.1.0, plus meta-imx-frdm at imx-frdm-4.0; commands run in ~/yocto-builds/imx91/sources)
 $ ls meta-imx/meta-imx-bsp/conf/machine | grep imx91
 imx91-11x11-lpddr4-evk.conf
 imx91-9x9-lpddr4-qsb.conf
@@ -147,7 +147,7 @@ $ git ls-remote https://github.com/nxp-imx-support/meta-imx-frdm | grep -E 'refs
 0391d7457a9f044f2b38ed3f91570926a669261b	refs/heads/lf-6.6.36-2.1.0
 0391d7457a9f044f2b38ed3f91570926a669261b	refs/tags/imx-frdm-4.0
 
-## NXP machine and BSP settings
+## NXP machine and BSP settings (commands run in ~/yocto-builds/imx91/sources)
 $ grep -Hn -A5 '^DDR_FIRMWARE_NAME' meta-imx-frdm/meta-imx-bsp/conf/machine/imx91-11x11-lpddr4-frdm.conf
 meta-imx-frdm/meta-imx-bsp/conf/machine/imx91-11x11-lpddr4-frdm.conf:26:DDR_FIRMWARE_NAME = " \
 meta-imx-frdm/meta-imx-bsp/conf/machine/imx91-11x11-lpddr4-frdm.conf-27-    lpddr4_dmem_1d_v202201.bin \
