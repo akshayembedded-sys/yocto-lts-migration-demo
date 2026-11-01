@@ -114,6 +114,54 @@ part /boot --source bootimg-partition --ondisk mmcblk --fstype=vfat --label boot
 part / --source rootfs --ondisk mmcblk --fstype=ext4 --label root --align 8192
 bootloader --ptable msdos
 
+## Scarthgap poky, more (yocto-5.0.21)
+$ grep -Hn 'REQUIRED_DISTRO_FEATURES' meta/recipes-core/systemd/systemd_*.bb
+meta/recipes-core/systemd/systemd_255.22.bb:15:REQUIRED_DISTRO_FEATURES += "usrmerge"
+meta/recipes-core/systemd/systemd_255.22.bb:19:REQUIRED_DISTRO_FEATURES += "systemd"
+$ grep -Hv '^#' meta/conf/distro/include/init-manager-systemd.inc | grep -v ':$'
+meta/conf/distro/include/init-manager-systemd.inc:DISTRO_FEATURES:append = " systemd usrmerge"
+meta/conf/distro/include/init-manager-systemd.inc:DISTRO_FEATURES_BACKFILL_CONSIDERED:append = " sysvinit"
+meta/conf/distro/include/init-manager-systemd.inc:VIRTUAL-RUNTIME_init_manager ??= "systemd"
+meta/conf/distro/include/init-manager-systemd.inc:VIRTUAL-RUNTIME_initscripts ??= "systemd-compat-units"
+meta/conf/distro/include/init-manager-systemd.inc:VIRTUAL-RUNTIME_login_manager ??= "shadow-base"
+meta/conf/distro/include/init-manager-systemd.inc:VIRTUAL-RUNTIME_dev_manager ??= "systemd"
+meta/conf/distro/include/init-manager-systemd.inc:ROOT_HOME ?= "/root"
+
+## Wrynose openembedded-core, more
+$ grep -Hn 'EXTRA_IMAGE_FEATURES' meta/conf/fragments/yocto/root-login-with-empty-password.conf
+meta/conf/fragments/yocto/root-login-with-empty-password.conf:10:EXTRA_IMAGE_FEATURES += "allow-empty-password empty-root-password allow-root-login"
+$ grep -Hn 'DEPENDS' meta/classes-recipe/pkgconfig.bbclass
+meta/classes-recipe/pkgconfig.bbclass:7:DEPENDS:prepend = "pkgconf-native "
+$ grep -HnE 'UBOOT_(LOADADDRESS|ENTRYPOINT)' meta/classes-recipe/kernel-fit-image.bbclass | head -4
+meta/classes-recipe/kernel-fit-image.bbclass:94:        d.getVar('UBOOT_LOADADDRESS'), d.getVar('UBOOT_ENTRYPOINT'),
+
+## bitbake-setup default registry (BitBake checkout at 51fd94a6)
+$ grep -n '"rev"' default-registry/configurations/poky-wrynose.conf.json
+9:                "rev": "2.18"
+16:                "rev": "wrynose"
+23:                "rev": "wrynose"
+30:                "rev": "wrynose"
+
+## meta-imx-frdm branches and tags (git ls-remote, recorded 2026-11-01)
+$ git ls-remote https://github.com/nxp-imx-support/meta-imx-frdm | grep -E 'refs/heads|imx-frdm-4.0'
+0391d7457a9f044f2b38ed3f91570926a669261b	refs/heads/lf-6.6.36-2.1.0
+0391d7457a9f044f2b38ed3f91570926a669261b	refs/tags/imx-frdm-4.0
+
+## NXP machine and BSP settings
+$ grep -Hn -A5 '^DDR_FIRMWARE_NAME' meta-imx-frdm/meta-imx-bsp/conf/machine/imx91-11x11-lpddr4-frdm.conf
+meta-imx-frdm/meta-imx-bsp/conf/machine/imx91-11x11-lpddr4-frdm.conf:26:DDR_FIRMWARE_NAME = " \
+meta-imx-frdm/meta-imx-bsp/conf/machine/imx91-11x11-lpddr4-frdm.conf-27-    lpddr4_dmem_1d_v202201.bin \
+meta-imx-frdm/meta-imx-bsp/conf/machine/imx91-11x11-lpddr4-frdm.conf-28-    lpddr4_dmem_2d_v202201.bin \
+meta-imx-frdm/meta-imx-bsp/conf/machine/imx91-11x11-lpddr4-frdm.conf-29-    lpddr4_imem_1d_v202201.bin \
+meta-imx-frdm/meta-imx-bsp/conf/machine/imx91-11x11-lpddr4-frdm.conf-30-    lpddr4_imem_2d_v202201.bin \
+meta-imx-frdm/meta-imx-bsp/conf/machine/imx91-11x11-lpddr4-frdm.conf-31-"
+$ grep -Hn -A4 '^IMAGE_BOOT_FILES' meta-freescale/conf/machine/include/imx-base.inc
+meta-freescale/conf/machine/include/imx-base.inc:626:IMAGE_BOOT_FILES ?= " \
+meta-freescale/conf/machine/include/imx-base.inc-627-    ${KERNEL_IMAGETYPE} \
+meta-freescale/conf/machine/include/imx-base.inc-628-    ${@make_dtb_boot_files(d)} \
+meta-freescale/conf/machine/include/imx-base.inc-629-    ${@bb.utils.contains('MACHINE_FEATURES', 'optee', '${OPTEE_BOOT_IMAGE}', '', d)} \
+meta-freescale/conf/machine/include/imx-base.inc-630-"
+
 ## kas 5.5 image entrypoint
 $ docker run --rm --entrypoint cat ghcr.io/siemens/kas/kas:5.5 /container-entrypoint | grep -nE 'build\|checkout\|clean|does not support|if \[ -n "\$USER_ID" \]; then$|exec \$GOSU "\$@"'
 183:	# Docker rootless does not support keeping the user namespace
