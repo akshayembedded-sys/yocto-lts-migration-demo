@@ -39,6 +39,12 @@ u-boot-imx-initial-env*
 *.rootfs*.json
 *-image-*.json
 linux_comp
+# package feeds, licences, CVE and SBOM databases from tmp/deploy
+deploy/
+*.rpm
+*.ipk
+*.deb
+*_cve.json
 *-image*.env
 *.its
 *-bootpart.wks
