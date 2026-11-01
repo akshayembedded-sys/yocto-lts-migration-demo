@@ -37,6 +37,7 @@ Wrynose layer. The other releases build from their tags.
 | Wrynose (kas) | `git checkout main && scripts/build.sh wrynose && scripts/boot-test.sh wrynose` |
 | Wrynose (bitbake-setup) | `git checkout main && scripts/bitbake-setup-build.sh` ([docs/BITBAKE-SETUP.md](docs/BITBAKE-SETUP.md)) |
 | FRDM-IMX91 | `git checkout main && scripts/imx91-build.sh sync && EULA=1 scripts/imx91-build.sh build`. Read and accept NXP's licence first (see below) |
+| Raspberry Pi 4 (Wrynose) | `scripts/rpi4-build.sh`: a step-by-step port to real hardware ([docs/RPI4-WRYNOSE.md](docs/RPI4-WRYNOSE.md)) |
 
 `build.sh` prints `BUILD_EXIT` and the image size. `boot-test.sh` boots the image in `runqemu`, logs in,
 checks that `demod` is `active (running)` and prints `BOOT_TEST_EXIT`. The serial console goes to `logs/`.

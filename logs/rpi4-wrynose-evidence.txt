@@ -1,0 +1,108 @@
+# Raspberry Pi 4 (raspberrypi4-64) on Wrynose: trimmed evidence for docs/RPI4-WRYNOSE.md.
+# Commands run in the repo root unless the header names another directory; ~ is the user's home.
+
+## Run 1: scripts/rpi4-build.sh with kas build (2026-11-01 17:29), full log logs/rpi4-wrynose-20261101-172920.log (local only)
+$ grep -E 'Sstate summary|BUILD_EXIT=|BUILD_SECONDS=|^.*ERROR' logs/rpi4-wrynose-20261101-172920.log | cut -c1-160
+2026-11-01 17:30:34 - INFO     - Initialising tasks...Sstate summary: Wanted 2788 Local 1216 Mirrors 0 Missed 1572 Current 0 (43% match, 0% complete)
+2026-11-01 18:17:52 - ERROR    - Separator is found, but chunk is longer than limit
+BUILD_EXIT=1
+BUILD_SECONDS=2916
+$ grep -A3 'Traceback' logs/rpi4-wrynose-20261101-172920.log | head -4; grep 'LimitOverrunError' logs/rpi4-wrynose-20261101-172920.log
+Traceback (most recent call last):
+  File "/usr/lib/python3.13/asyncio/streams.py", line 562, in readline
+    line = await self.readuntil(sep)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^
+    raise exceptions.LimitOverrunError(
+asyncio.exceptions.LimitOverrunError: Separator is found, but chunk is longer than limit
+
+## bitbake's own log of run 1 (commands run in ~/yocto-builds/rpi4/build/tmp/log/cooker/raspberrypi4-64)
+$ grep 'Tasks Summary' 20261101120013.log
+NOTE: Tasks Summary: Attempted 5500 tasks of which 2293 didn't need to be rerun and all succeeded.
+$ awk 'length>65536{print NR, length}' 20261101120013.log   # lines over kas's 64 KiB limit
+12761 86276
+$ sed -n 12761p 20261101120013.log | cut -c1-120
+WARNING: demo-image-1.0-r0 do_sbom_cve_check: linux-raspberrypi-6.18.33+git: Found unpatched CVEs: CVE-1999-0524, CVE-19
+$ sed -n 12761p 20261101120013.log | grep -oE 'CVE-[0-9]+-[0-9]+' | wc -l
+5389
+
+## Same line in the QEMU Wrynose build, for comparison
+$ grep -h 'do_sbom_cve_check: linux-yocto' logs/wrynose-20261031-132129.log | grep -oE 'CVE-[0-9]+-[0-9]+' | wc -l
+559
+$ grep -h 'do_sbom_cve_check: linux-yocto' logs/wrynose-20261031-132129.log | cut -c1-110
+2026-10-31 13:24:44 - INFO     - WARNING: demo-image-1.0-r0 do_sbom_cve_check: linux-yocto-6.18.52+git: Found 
+
+## kas 5.5 reads bitbake's output with asyncio's default stream limit (64 KiB)
+$ docker run --rm --entrypoint sh ghcr.io/siemens/kas/kas:5.5 -c 'grep -n create_subprocess_exec /usr/local/lib/python3.13/dist-packages/kas/libkas.py'
+149:        process = await asyncio.create_subprocess_exec(
+
+## Run 2: scripts/rpi4-build.sh with kas shell -c 'bitbake demo-image' (2026-11-01 18:19), full log logs/rpi4-wrynose-20261101-181925.log (local only)
+$ grep -E 'Tasks Summary|BUILD_|IMAGE_FILE' logs/rpi4-wrynose-20261101-181925.log
+BUILD_SYS            = "x86_64-linux"
+NOTE: Tasks Summary: Attempted 5500 tasks of which 5488 didn't need to be rerun and all succeeded.
+BUILD_RELEASE=wrynose MACHINE=raspberrypi4-64
+BUILD_EXIT=0
+BUILD_SECONDS=205
+IMAGE_FILE=~/yocto-builds/rpi4/build/tmp/deploy/images/raspberrypi4-64/demo-image-raspberrypi4-64.rootfs-20261101120029.wic.bmap 3706
+IMAGE_FILE=~/yocto-builds/rpi4/build/tmp/deploy/images/raspberrypi4-64/demo-image-raspberrypi4-64.rootfs-20261101120029.wic.bz2 58568276
+$ grep -c 'do_sbom_cve_check: linux-raspberrypi' logs/rpi4-wrynose-20261101-181925.log   # the long line now reaches the log
+1
+
+## Deployed image (commands run in ~/yocto-builds/rpi4/build/tmp/deploy/images/raspberrypi4-64)
+$ grep -E '^(demod|kernel-image-6|systemd |systemd-serialgetty)' demo-image-raspberrypi4-64.rootfs.manifest
+demod cortexa72 1.0+git0+88d409fc96
+kernel-image-6.18.33-v8 raspberrypi4_64 6.18.33+git0+6d012fbc35_95b85bebbe
+systemd cortexa72 259.5
+systemd-serialgetty raspberrypi4_64 1.0
+$ grep -c '^linux-firmware' demo-image-raspberrypi4-64.rootfs.manifest
+0
+$ grep -n enable_uart bootfiles/config.txt
+245:enable_uart=1
+$ cat bootfiles/cmdline.txt
+dwc_otg.lpm_enable=0 console=serial0,115200 root=/dev/mmcblk0p2 rootfstype=ext4 rootwait  net.ifnames=0
+$ ls fitImage*
+fitImage
+fitImage-its--6.18.33-v8-r0-raspberrypi4-64-20261101120029.its
+fitImage-its-raspberrypi4-64
+
+## bitbake variables (kas shell kas/wrynose.yml:kas/wrynose-rpi4.yml -c 'bitbake-getvar --value -r demo-image <VAR>'; IMAGE_BOOT_FILES cut to its first and last entries)
+PREFERRED_PROVIDER_virtual/kernel=linux-raspberrypi
+KERNEL_IMAGETYPE=Image
+RPI_USE_U_BOOT=
+SERIAL_CONSOLES=115200;ttyS0
+IMAGE_FSTYPES=tar.bz2 ext3 wic.bz2 wic.bmap
+WKS_FILE=sdimage-raspberrypi.wks
+KERNEL_DEPLOY_DEPEND=linux-yocto-fitimage:do_deploy
+IMAGE_BOOT_FILES=bootfiles/* ... Image;kernel8.img
+
+## Choosing the BSP branch (2026-11-01)
+$ git ls-remote --heads https://git.yoctoproject.org/meta-raspberrypi scarthgap wrynose
+018d44467c4f09eb63f8ea5e86e85d755250cf89	refs/heads/scarthgap
+919588393f41b48cb6c5d832aa35e58a19b6762d	refs/heads/wrynose
+## commands below run in a clone of meta-raspberrypi, branch wrynose
+$ git log -1 --format='%H %ci'
+919588393f41b48cb6c5d832aa35e58a19b6762d 2026-10-10 14:47:06 -0700
+$ grep -n 'LAYERSERIES_COMPAT\|LAYERDEPENDS' conf/layer.conf
+12:LAYERSERIES_COMPAT_raspberrypi = "wrynose"
+13:LAYERDEPENDS_raspberrypi = "core"
+$ ls conf/machine/*.conf | xargs -n1 basename
+raspberrypi0-2w-64.conf raspberrypi0-2w.conf raspberrypi0.conf raspberrypi0-wifi.conf raspberrypi2-64.conf raspberrypi2.conf raspberrypi3-64.conf raspberrypi3.conf raspberrypi4-64.conf raspberrypi4.conf raspberrypi5.conf raspberrypi-armv7.conf raspberrypi-armv8.conf raspberrypi-cm3.conf raspberrypi-cm5-io-board.conf raspberrypi-cm.conf raspberrypi.conf 
+$ grep -n 'LICENSE_FLAGS' recipes-kernel/linux-firmware-rpidistro/linux-firmware-rpidistro_git.bb
+16:LICENSE_FLAGS = "synaptics-killswitch"
+$ sed -n 8,12p conf/machine/raspberrypi4-64.conf
+MACHINE_EXTRA_RRECOMMENDS += "\
+    linux-firmware-rpidistro-bcm43455 \
+    bluez-firmware-rpidistro-bcm4345c0-hcd \
+    linux-firmware-rpidistro-bcm43456 \
+    bluez-firmware-rpidistro-bcm4345c5-hcd \
+
+## Disk use after run 2 (commands run in ~)
+$ du -sh yocto-builds/rpi4/build/tmp yocto-builds/rpi4/work
+19G	yocto-builds/rpi4/build/tmp
+283M	yocto-builds/rpi4/work
+
+## Image size and kernel version (commands run in ~/yocto-builds/rpi4/build/tmp)
+$ grep -E '<ImageSize>|<MappedBlocksCount>' deploy/images/raspberrypi4-64/demo-image-raspberrypi4-64.rootfs.wic.bmap
+    <ImageSize> 360710144 </ImageSize>
+    <MappedBlocksCount> 40390 </MappedBlocksCount>
+$ cat pkgdata/raspberrypi4-64/kernel-depmod/kernel-abiversion
+6.18.33-v8
