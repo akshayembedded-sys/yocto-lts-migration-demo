@@ -2,7 +2,8 @@
 
 The main Wrynose build uses kas (`kas/wrynose.yml`). This page records one build of the same image with
 `bitbake-setup`, the setup tool that comes with BitBake from 5.3 on
-([Wrynose Quick Build](https://docs.yoctoproject.org/wrynose/brief-yoctoprojectqs/index.html#install-and-use-bitbake-setup)).
+([5.3 release notes](https://docs.yoctoproject.org/migration-guides/release-notes-5.3.html);
+[Wrynose Quick Build](https://docs.yoctoproject.org/wrynose/brief-yoctoprojectqs/index.html#install-and-use-bitbake-setup)).
 Everything here comes from one run on 2026-10-31: `scripts/bitbake-setup-build.sh`, full log
 `logs/bitbake-setup-20261031-133501.log` (local only), trimmed evidence in `logs/bitbake-setup-evidence.txt`.
 The oe-core line check and the kas entrypoint lines are in `logs/source-facts-evidence.txt`.

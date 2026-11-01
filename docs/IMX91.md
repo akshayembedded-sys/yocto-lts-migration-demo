@@ -34,7 +34,7 @@ meta-imx-frdm lists four i.MX 91 machines in its `meta-imx-bsp` layer:
 
 | Machine | What it is |
 |---|---|
-| `imx91-11x11-lpddr4-frdm` | **Chosen.** The FRDM-IMX91 board: device tree `imx91-11x11-frdm`, U-Boot `imx91_11x11_frdm`, LPDDR4 training firmware |
+| `imx91-11x11-lpddr4-frdm` | **Chosen.** The FRDM-IMX91 board: device tree `imx91-11x11-frdm`, U-Boot `imx91_11x11_frdm`, LPDDR4 firmware files (`DDR_FIRMWARE_NAME`) |
 | `imx91frdm` | Wrapper: `require conf/machine/imx91-11x11-lpddr4-frdm.conf`. The README uses it, but its own comment says "For most users, the dedicated machine imx91-11x11-lpddr4-frdm.conf should be used for simplicity." |
 | `imx91-11x11-lpddr4-frdm-imx91s`, `imx91frdmimx91s` | The FRDM-IMX91S, a different board |
 
@@ -73,7 +73,7 @@ IMX91_SECONDS=4090
 **Known mistake in this run.** The script was meant to add shared `DL_DIR` and `SSTATE_DIR` and
 `rm_work` to `local.conf`. Its guard checked for a `^DL_DIR` line, and NXP's `local.conf` already has
 `DL_DIR ?= "${BSPDIR}/downloads/"`, so the block was skipped. The run therefore used NXP's default
-cache dirs and kept all work dirs. That is why `build/tmp` is 67 G (`tmp/work` 64 G). The guard now
+cache dirs and kept all work dirs: `build/tmp` is 67 G, of which `tmp/work` is 64 G. The guard now
 looks for a marker line of our own. A rebuild has not tested the fix yet.
 
 ## Flashing and boot
